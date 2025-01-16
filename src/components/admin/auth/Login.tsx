@@ -19,9 +19,19 @@ const Login: React.FC = () => {
 
     try {
       const response = await signIn(credentials);
-      const role = response.data.role;
+
+      // Extract data from the API response
+      const { role } = response.data;
+      const { access_token, refresh_token } = response;
+
       console.log("Role:", role);
-      setRole(role); // Update global state with role
+
+      // Save tokens in localStorage
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("refresh_token", refresh_token);
+
+      // Set role in Zustand state
+      setRole(role);
 
       // Navigate based on role
       if (role === "ADMIN") {

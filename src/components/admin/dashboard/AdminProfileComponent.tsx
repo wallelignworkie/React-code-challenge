@@ -4,7 +4,7 @@ import profileImage from "../../../assets/images/engida-express-logo1.jpg";
 import useUserStore from "@/store/useUserStore";
 const AdminProfileComponent = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const { clearRole } = useUserStore();
+  const { clearAuth } = useUserStore();
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -56,7 +56,7 @@ const AdminProfileComponent = () => {
                 <a href="#">Settings</a>
               </li>
               <li className="px-4 py-2 hover:bg-gray-100">
-                <button onClick={clearRole}>Logout</button>
+                <button onClick={clearAuth}>Logout</button>
               </li>
             </ul>
           </Card>

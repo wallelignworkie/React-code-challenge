@@ -15,6 +15,8 @@ import AgentDashboardPage from "@/page/AgentDashboardPage";
 import AdminCreateAgentAccountPage from "@/page/AdminCreateAgentAccountPage";
 import AgentDashboardUsersPage from "@/page/AgentDashboardUsersPage";
 import TrackingComponent from "@/components/homepage/TrackingComponent";
+import ReportPage from "@/page/ReportPage";
+import AdminCreateCityPage from "@/page/AdminCreateCityPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -108,6 +110,22 @@ const AppRoute: React.FC = () => {
           element={
             <ProtectedRoute allowedRoles={["ADMIN"]}>
               <AdminCreateAgentAccountPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/report"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
+              <ReportPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin-city"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN"]}>
+              <AdminCreateCityPage />
             </ProtectedRoute>
           }
         />
