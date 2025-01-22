@@ -1,18 +1,13 @@
 import axios from "axios";
+import { getHeaders } from "./accessToken";
 
 // API call to create a new city
 export const CreateCities = async (data: { name: string }): Promise<any> => {
   try {
-    const token = localStorage.getItem("access_token"); // Retrieve token from localStorage
-
     const response = await axios.post(
       "https://tamagn-express-api.onrender.com/api/v1/cities/create",
       data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Pass token in Authorization header
-        },
-      }
+      getHeaders()
     );
 
     return response.data; // Return the API response data
@@ -26,17 +21,29 @@ export const CreateCities = async (data: { name: string }): Promise<any> => {
 };
 
 // API call to get all cities
-export const getCities = async (): Promise<{ id: number; name: string }[]> => {
-  const token = localStorage.getItem("access_token"); // Retrieve token from localStorage
-
+export const getCities = async (): Promise<{ id: string; name: string }[]> => {
   try {
     const response = await axios.get(
       "https://tamagn-express-api.onrender.com/api/v1/cities/find-all",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Pass token in Authorization header
-        },
-      }
+      getHeaders()
+    );
+
+    return response.data; // Return the API response data
+  } catch (error: any) {
+    console.error(
+      "Error fetching cities:",
+      error.response?.data || error.message
+    );
+    throw new Error(error.response?.data?.message || "Failed to fetch cities"); // Throw a more user-friendly error
+  }
+};
+
+// API call to get all cities
+export const DeleteCity = async (): Promise<{ id: number }[]> => {
+  try {
+    const response = await axios.get(
+      "https://tamagn-express-api.onrender.com/api/v1/cities/find-all",
+      getHeaders()
     );
 
     return response.data; // Return the API response data

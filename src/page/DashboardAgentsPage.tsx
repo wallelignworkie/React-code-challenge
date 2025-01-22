@@ -1,8 +1,8 @@
+import AgentsComponent from "@/components/dashboard/manageAgents/ManageAgents";
 import HeaderComponent from "@/components/dashboard/layout/HeaderComponent";
 import SidebarComponent from "@/components/dashboard/layout/SidebarComponent";
-import Report from "@/components/dashboard/Report/Report";
 
-const ReportPage = () => {
+const DashboardAgentsPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-row">
       {/* Sidebar */}
@@ -11,10 +11,10 @@ const ReportPage = () => {
       {/* Main Content */}
       <main className="flex-1 p-6 ">
         <HeaderComponent />
-        <Report />
+        <AgentsComponent />
       </main>
     </div>
   );
 };
 
-export default ReportPage;
+export default DashboardAgentsPage;

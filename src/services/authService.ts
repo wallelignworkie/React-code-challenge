@@ -1,7 +1,7 @@
 import axios from "axios";
-
+// import { baseUrl } from "./url";
 interface LoginCredentials {
-  email: string;
+  phone: string;
   password: string;
 }
 
@@ -17,11 +17,21 @@ interface LoginResponse {
 }
 
 export const signIn = async (
-  credentials: LoginCredentials
+  credentials: LoginCredentials,
+  setLoading: (isLoading: boolean) => void
 ): Promise<LoginResponse> => {
-  const response = await axios.post<LoginResponse>(
-    "https://tamagn-express-api.onrender.com/api/v1/auth/signin",
-    credentials
-  );
-  return response.data;
+  try {
+    setLoading(true);
+    const response = await axios.post<LoginResponse>(
+      "https://tamagn-express-api.onrender.com/api/v1/auth/signin",
+      credentials
+    );
+    setLoading(false);
+
+    return response.data;
+  } catch (error: any) {
+    setLoading(false);
+    console.error(" Error!!", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to Login");
+  }
 };
