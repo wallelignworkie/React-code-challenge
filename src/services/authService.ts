@@ -16,6 +16,7 @@ interface LoginResponse {
   };
 }
 
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 export const signIn = async (
   credentials: LoginCredentials,
   setLoading: (isLoading: boolean) => void
@@ -23,7 +24,7 @@ export const signIn = async (
   try {
     setLoading(true);
     const response = await axios.post<LoginResponse>(
-      "https://tamagn-express-api.onrender.com/api/v1/auth/signin",
+      `${baseURL}auth/signin`,
       credentials
     );
     setLoading(false);

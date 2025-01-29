@@ -1,12 +1,13 @@
 import axios from "axios";
 import { getHeaders } from "./accessToken";
-import { Agent, AgentData, AgentRequest, GetAgentsResponse } from "@/types";
+import { Agent, AgentData, AgentRequest } from "@/types";
 
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 // Create an agent
 export const CreateAgent = async (data: AgentRequest): Promise<AgentData> => {
   try {
     const response = await axios.post(
-      "https://tamagn-express-api.onrender.com/api/v1/agent/create",
+      `${baseURL}agent/create`,
       data,
       getHeaders()
     );
@@ -24,10 +25,7 @@ export const CreateAgent = async (data: AgentRequest): Promise<AgentData> => {
 // Get all agents
 export const getAgents = async (): Promise<Agent[]> => {
   try {
-    const response = await axios.get(
-      "https://tamagn-express-api.onrender.com/api/v1/agent/find-all",
-      getHeaders()
-    );
+    const response = await axios.get(`${baseURL}agent/find-all`, getHeaders());
     return response.data;
   } catch (error: any) {
     console.error(

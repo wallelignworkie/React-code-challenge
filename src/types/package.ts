@@ -112,10 +112,22 @@ export interface Package {
     updatedAt: string;
     deletedAt: string | null;
   };
-  agent: any | null; // Define more explicitly if the `agent` object has a specific structure
+  agent: any | null; // Define more explicitly if needed
 }
 
-export type GetPackagesResponse = Package[];
+export interface PaginationMeta {
+  total: number;
+  lastPage: number;
+  currentPage: number;
+  perPage: number;
+  prev: number | null;
+  next: number | null;
+}
+
+export interface GetPackagesResponse {
+  data: Package[];
+  meta: PaginationMeta;
+}
 
 export interface FormInputs {
   packageName: string;

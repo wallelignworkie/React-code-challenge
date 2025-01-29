@@ -1,11 +1,13 @@
 import axios from "axios";
 import { getHeaders } from "./accessToken";
+// import { baseUrl } from "./url";
 
 // API call to create a new city
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 export const CreateCities = async (data: { name: string }): Promise<any> => {
   try {
     const response = await axios.post(
-      "https://tamagn-express-api.onrender.com/api/v1/cities/create",
+      `${baseURL}cities/create`,
       data,
       getHeaders()
     );
@@ -23,10 +25,7 @@ export const CreateCities = async (data: { name: string }): Promise<any> => {
 // API call to get all cities
 export const getCities = async (): Promise<{ id: string; name: string }[]> => {
   try {
-    const response = await axios.get(
-      "https://tamagn-express-api.onrender.com/api/v1/cities/find-all",
-      getHeaders()
-    );
+    const response = await axios.get(`${baseURL}cities/find-all`, getHeaders());
 
     return response.data; // Return the API response data
   } catch (error: any) {
@@ -41,10 +40,7 @@ export const getCities = async (): Promise<{ id: string; name: string }[]> => {
 // API call to get all cities
 export const DeleteCity = async (): Promise<{ id: number }[]> => {
   try {
-    const response = await axios.get(
-      "https://tamagn-express-api.onrender.com/api/v1/cities/find-all",
-      getHeaders()
-    );
+    const response = await axios.get(`${baseURL}cities/find-all`, getHeaders());
 
     return response.data; // Return the API response data
   } catch (error: any) {

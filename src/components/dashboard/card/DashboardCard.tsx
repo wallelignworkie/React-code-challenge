@@ -1,35 +1,81 @@
 import { Card, CardHeader } from "@/components/ui/card";
+import {
+  getAdminOverviewData,
+  getAgentOverviewData,
+} from "@/services/dashboardService";
 import useUserStore from "@/store/useUserStore";
+import { useQuery } from "@tanstack/react-query";
 
 const DashboardCard = () => {
   const { role } = useUserStore();
   const effectiveRole = role ?? "guest"; // Fallback to "guest" if role is null
 
-  const getCardsByRole = (role: string) => {
+  // Fetch admin data only for admins
+  const {
+    data: adminOverviewData,
+    isLoading: isAdminLoading,
+    isError: isAdminError,
+  } = useQuery({
+    queryKey: ["adminOverviewData"],
+    queryFn: getAdminOverviewData,
+    enabled: effectiveRole === "ADMIN", // Only fetch if user is an admin
+  });
+
+  // Fetch agent data only for agents
+  const {
+    data: agentOverviewData,
+    isLoading: isAgentLoading,
+    isError: isAgentError,
+  } = useQuery({
+    queryKey: ["agentOverviewData"],
+    queryFn: getAgentOverviewData,
+    enabled: effectiveRole === "AGENT", // Only fetch if user is an agent
+  });
+
+  // Choose the correct data based on the role
+  const overviewData =
+    effectiveRole === "ADMIN" ? adminOverviewData : agentOverviewData;
+
+  console.log({ overviewData });
+
+  const getCardsByRole = (role: string, data: any) => {
+    if (!data) return [];
+
     switch (role) {
       case "ADMIN":
         return [
-          { name: "Users", count: "12k" },
-          { name: "Packages", count: "15k" },
-          { name: "Agents", count: "15k" },
+          { name: "Users", count: data.users ?? 0 },
+          { name: "Packages", count: data.packages ?? 0 },
+          { name: "price", count: data.price ?? 0 },
         ];
       case "AGENT":
         return [
-          { name: "Users", count: "12k" },
-          { name: "Packages", count: "15k" },
-          { name: "Orders", count: "15k" },
+          { name: "Users", count: data.users ?? 0 },
+          { name: "Packages", count: data.packages ?? 0 },
+          { name: "Price", count: data.price ?? 0 },
         ];
-      // case "SUPER_ADMIN":
-      //   return [
-      //     { name: "Packages", count: "15k" },
-      //     { name: "Orders", count: "15k" },
-      //   ];
       default:
         return []; // Default for unknown or guest roles
     }
   };
 
-  const cards = getCardsByRole(effectiveRole); // Use effectiveRole
+  // Show loading only when fetching the relevant data
+  if (
+    (isAdminLoading && effectiveRole === "ADMIN") ||
+    (isAgentLoading && effectiveRole === "AGENT")
+  ) {
+    return <p>Loading...</p>;
+  }
+
+  // Show error only if the relevant query fails
+  if (
+    (isAdminError && effectiveRole === "ADMIN") ||
+    (isAgentError && effectiveRole === "AGENT")
+  ) {
+    return <p>Error fetching data.</p>;
+  }
+
+  const cards = getCardsByRole(effectiveRole, overviewData); // Pass relevant data
 
   return (
     <div>

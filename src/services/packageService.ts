@@ -1,13 +1,14 @@
 import axios from "axios";
 import { getHeaders } from "./accessToken";
-import { PackageRequest, PackageResponse, Package } from "@/types/package";
+import { PackageRequest, PackageResponse } from "@/types/package";
 
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 export const CreatePackage = async (
   data: PackageRequest
 ): Promise<PackageResponse> => {
   try {
     const response = await axios.post(
-      "https://tamagn-express-api.onrender.com/api/v1/package/create",
+      `${baseURL}package/create`,
       data,
       getHeaders()
     );
@@ -25,13 +26,13 @@ export const CreatePackage = async (
 };
 
 // Get all packages
-export const getPackages = async (): Promise<Package[]> => {
+export const getPackages = async (page: number, pageSize: number) => {
   try {
     const response = await axios.get(
-      "https://tamagn-express-api.onrender.com/api/v1/package/find-all",
+      `${baseURL}package/find-all?page=${page}&size=${pageSize}`,
       getHeaders()
     );
-    return response.data;
+    return response.data; // { data: Package[], meta: { totalPages, currentPage } }
   } catch (error: any) {
     console.error(
       "Error fetching packages:",

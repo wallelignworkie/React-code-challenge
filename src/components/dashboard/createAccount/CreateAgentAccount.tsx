@@ -62,16 +62,8 @@ const CreateAgentAccount = () => {
   } = useForm<FormInputs>();
 
   const onSubmit: SubmitHandler<FormInputs> = (formData) => {
-    // const dataToSubmit = {
-    //   ...formData,
-    //   gender: "MALE", // Static gender
-    //   age: "30",
-    //   handlesUrgent: true,
-    // };
-    // console.log("Submitted Data:", dataToSubmit);
-
     createAgentMutation.mutate(formData);
-    reset(); // Reset the form after submission
+    reset();
   };
   if (isLoading) {
     return " cities Loading...";

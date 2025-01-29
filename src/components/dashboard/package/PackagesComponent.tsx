@@ -2,20 +2,21 @@
 
 import * as React from "react";
 import {
-  ColumnDef,
-  ColumnFiltersState,
   SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useQuery } from "@tanstack/react-query";
+import { getPackages } from "@/services/packageService";
+import { Package } from "@/types";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -26,7 +27,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -35,141 +35,132 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import { getPackages } from "@/services/packageService";
-import { Package } from "@/types";
+import ForwardDialog from "./ForwardDialog";
 
-// Define the table columns
-const columns: ColumnDef<Package>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "trackingNumber",
-    header: "Tracking Number",
-    cell: ({ row }) => <div>{row.getValue("trackingNumber")}</div>,
-  },
-  {
-    accessorKey: "packageName",
-    header: "Package Name",
-    cell: ({ row }) => <div>{row.getValue("packageName")}</div>,
-  },
-  {
-    accessorKey: "senderFirstName",
-    header: "Sender Name",
-    cell: ({ row }) => (
-      <div>
-        {row.original.senderFirstName} {row.original.senderLastName}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
-  },
-  {
-    accessorKey: "price",
-    header: () => <div className="text-right">Price</div>,
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"));
-      return (
-        <div className="text-right font-medium">
-          {new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-          }).format(price)}
-        </div>
-      );
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const packageId = row.original.id;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(packageId)}
-            >
-              Copy Package ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View Details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-// Main component
 export default function PackagesComponent() {
-  const {
-    data: packages = [], // Default empty array
-    isLoading,
-    isError,
-  } = useQuery<Package[]>({
-    queryKey: ["packages"],
-    queryFn: getPackages, // Ensure this function returns Package[]
+  const [page, setPage] = React.useState(1);
+  const [pageSize] = React.useState(10); // Set per-page size
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["packages", page],
+    queryFn: () => getPackages(page, pageSize),
+    placeholderData: (previousData) => previousData,
+    staleTime: 5000,
   });
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [selectedPackage, setSelectedPackage] = React.useState<Package | null>(
+    null
   );
+
+  // Function to handle opening the ForwardDialog
+  const handleForwardClick = (packageData: Package) => {
+    setSelectedPackage(packageData); // Set the selected package
+    setIsDialogOpen(true); // Open the dialog
+  };
+
+  const packages = data?.data ?? [];
+  const pagination = data?.meta;
+
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable<Package>({
-    data: packages, // Use API data here
-    columns, // Correctly typed columns for Package
+    data: packages,
+    columns: [
+      {
+        id: "select",
+        header: ({ table }) => (
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
+            aria-label="Select all"
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      },
+      {
+        accessorKey: "trackingNumber",
+        header: () => (
+          <div className="flex items-center">
+            Tracking Number <ArrowUpDown className="ml-2 h-4 w-4" />
+          </div>
+        ),
+        cell: ({ row }) => <div>{row.getValue("trackingNumber")}</div>,
+      },
+      {
+        accessorKey: "packageName",
+        header: "Package Name",
+        cell: ({ row }) => <div>{row.getValue("packageName")}</div>,
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => (
+          <div className="capitalize">{row.getValue("status")}</div>
+        ),
+      },
+      {
+        id: "actions",
+        cell: ({ row }) => {
+          const packageData = row.original;
+
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={() =>
+                    navigator.clipboard.writeText(packageData.trackingNumber)
+                  }
+                >
+                  Copy Tracking Number{" "}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleForwardClick(packageData)}
+                >
+                  Forward
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Delete</DropdownMenuItem>
+                <DropdownMenuItem>View Details</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
+      },
+    ],
     onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
-      columnFilters,
       columnVisibility,
       rowSelection,
     },
+    manualPagination: true,
+    pageCount: pagination?.totalPages || 1,
   });
 
   if (isLoading) return <div>Loading...</div>;
@@ -252,7 +243,7 @@ export default function PackagesComponent() {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={table.getAllColumns().length}
                   className="h-24 text-center"
                 >
                   No results.
@@ -267,25 +258,33 @@ export default function PackagesComponent() {
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setPage((old) => Math.max(old - 1, 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </Button>
+        <span>
+          Page {page} of {pagination?.totalPages ?? 1}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setPage((old) => old + 1)}
+          disabled={page >= (pagination?.totalPages ?? 1)}
+        >
+          Next
+        </Button>
       </div>
+
+      {/* Forward Dialog */}
+      <ForwardDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        trackingNumber={selectedPackage?.trackingNumber || ""}
+      />
     </div>
   );
 }

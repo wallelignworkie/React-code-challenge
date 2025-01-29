@@ -25,7 +25,8 @@ import { CreateForwardPackage } from "@/services/forwardPackage";
 import { Agent } from "@/types";
 import { getAgents } from "@/services/agentService";
 import { Label } from "@/components/ui/label";
-import { forwardPackageRequest } from "@/types/forwardPackage";
+import ErrorMessage from "@/components/Alert/ErrorMessage";
+import SuccessAlertMessage from "@/components/Alert/SuccessAlertMessage";
 
 type ForwardDialogProps = {
   isOpen: boolean;
@@ -65,15 +66,13 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
     isError,
   } = useQuery<Agent[]>({
     queryKey: ["agents"],
-    queryFn: getAgents, // Ensure this function returns Agent[] from the API
+    queryFn: getAgents,
   });
   console.log({ trackingNumber });
 
-  // Mutation for forwarding the package
   const forwardMutation = useMutation({
     mutationFn: (data: ForwardFormData) =>
-      CreateForwardPackage({ ...data, trackingNumber }),
-
+      CreateForwardPackage({ trackingNumber, ...data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["forwardPackages"] });
       return "Package forwarded successfully!";
@@ -83,10 +82,11 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
     },
   });
   const onSubmit = (data: ForwardFormData) => {
-    const payload = { ...data, trackingNumber };
+    const payload = { trackingNumber, ...data };
     forwardMutation.mutate(payload);
-    console.log("payload:", payload); // Log for debugging
-    console.log("Submitted Data:", { ...data, trackingNumber }); // Log for debugging
+    reset();
+    console.log("payload:", payload);
+    console.log("Submitted Data:", { trackingNumber, ...data });
   };
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading data.</div>;
@@ -97,29 +97,18 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
         <DialogHeader>
           <DialogTitle>Forward Package</DialogTitle>
           <DialogDescription>
-            Enter the details to forward the package.
+            {forwardMutation.isPending && " Loading..."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* <div>
-            <Controller
-              name="destinationAgentId"
-              control={control}
-              rules={{ required: "Destination Agent ID is required" }}
-              render={({ field }) => (
-                <Input
-                  placeholder="Destination Agent ID"
-                  {...field}
-                  className={errors.destinationAgentId ? "border-red-500" : ""}
-                />
-              )}
+          {forwardMutation.isError && (
+            <ErrorMessage user_text={forwardMutation.error?.message} />
+          )}
+          {forwardMutation.isSuccess && (
+            <SuccessAlertMessage
+              user_text={"You have Forwarding Successfully"}
             />
-            {errors.destinationAgentId && (
-              <p className="text-red-500 text-sm">
-                {errors.destinationAgentId.message}
-              </p>
-            )}
-          </div> */}
+          )}
           <div>
             <Label>Receive agent</Label>
             <Controller
