@@ -6,6 +6,7 @@ import LogoImage from "../../assets/images/engida-express-logo2.jpg";
 import Button from "@/components/button/Button";
 import ErrorMessage from "../Alert/ErrorMessage";
 import { baseUrl } from "@/services/url";
+import { formatPhoneNumber } from "@/utils/formatPhone";
 
 const Login: React.FC = () => {
   const [credentials, setCredentials] = useState({
@@ -18,9 +19,14 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   console.log({ baseUrl });
   const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
+
+    const formattedPhone = formatPhoneNumber(credentials.phone.trim());
     try {
-      const response = await signIn(credentials, setLoading);
+      const response = await signIn(
+        { ...credentials, phone: formattedPhone },
+        setLoading
+      );
 
       // Extract data from the API response
       const { role } = response.data;

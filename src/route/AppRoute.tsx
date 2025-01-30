@@ -5,7 +5,6 @@ import AgentAddPackage from "@/page/AddPackage";
 import Homepage from "@/page/Homepage";
 import LoginPage from "@/page/LoginPage";
 import RegistrationPage from "@/page/RegistrationPage";
-import ProtectedRoute from "@/components/ProtectedRoute";
 import TrackingComponent from "@/components/homepage/TrackingComponent";
 import ReportPage from "@/page/ReportPage";
 import DashboardUsersPage from "@/page/DashboardUsersPage";
@@ -14,6 +13,8 @@ import AddPackage from "@/page/AddPackage";
 import CreateCityPage from "@/page/CreateCityPage";
 import CreateAgentAccountPage from "@/page/CreateAgentAccountPage";
 import DashboardAgentsPage from "@/page/DashboardAgentsPage";
+import IncomingPackages from "@/page/IncomingPackages";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoute: React.FC = () => {
   return (
@@ -93,6 +94,14 @@ const AppRoute: React.FC = () => {
           element={
             <ProtectedRoute allowedRoles={["ADMIN"]}>
               <CreateAgentAccountPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/incoming-packages"
+          element={
+            <ProtectedRoute allowedRoles={["AGENT"]}>
+              <IncomingPackages />
             </ProtectedRoute>
           }
         />

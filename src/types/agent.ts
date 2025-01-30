@@ -56,3 +56,16 @@ export interface Agent {
 }
 
 export type GetAgentsResponse = Agent[];
+
+export interface FormInputs {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  phone: string;
+  cityId: string;
+  address: string;
+  gender: string;
+  age: string;
+  handlesUrgent: boolean;
+}

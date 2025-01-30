@@ -10,8 +10,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
-import { getPackages } from "@/services/packageService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { DeletePackage, getPackages } from "@/services/packageService";
 import { Package } from "@/types";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
@@ -36,27 +36,41 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import ForwardDialog from "./ForwardDialog";
+import DeleteConfirmationPopup from "../../deleteConfirmation/DeleteConfirmationPopup";
+import SuccessAlertMessage from "@/components/Alert/SuccessAlertMessage";
+import ErrorMessage from "@/components/Alert/ErrorMessage";
 
 export default function PackagesComponent() {
   const [page, setPage] = React.useState(1);
   const [pageSize] = React.useState(10); // Set per-page size
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ["packages", page],
     queryFn: () => getPackages(page, pageSize),
     placeholderData: (previousData) => previousData,
-    staleTime: 5000,
+    refetchInterval: 2000,
   });
 
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [selectedPackage, setSelectedPackage] = React.useState<Package | null>(
     null
   );
-
+  const [deletePackageId, setDeletePackageId] = React.useState<string | null>(
+    null
+  );
   // Function to handle opening the ForwardDialog
   const handleForwardClick = (packageData: Package) => {
     setSelectedPackage(packageData); // Set the selected package
     setIsDialogOpen(true); // Open the dialog
   };
+  const queryClient = useQueryClient();
+  const deletePackageMutation = useMutation({
+    mutationFn: DeletePackage,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cities"] });
+      setDeletePackageId(null);
+    },
+  });
 
   const packages = data?.data ?? [];
   const pagination = data?.meta;
@@ -140,7 +154,11 @@ export default function PackagesComponent() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Delete</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setDeletePackageId(packageData.id)}
+                >
+                  Delete
+                </DropdownMenuItem>
                 <DropdownMenuItem>View Details</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -168,6 +186,14 @@ export default function PackagesComponent() {
 
   return (
     <div className="w-full bg-white p-4 rounded-lg">
+      {deletePackageMutation.isError && (
+        <ErrorMessage user_text={deletePackageMutation.error.message} />
+      )}
+      {deletePackageMutation.isSuccess && (
+        <SuccessAlertMessage
+          user_text={"You ave Deleted Package successfully"}
+        />
+      )}
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter packages..."
@@ -278,7 +304,14 @@ export default function PackagesComponent() {
           Next
         </Button>
       </div>
-
+      <DeleteConfirmationPopup
+        isOpen={deletePackageId !== null}
+        onConfirm={() =>
+          deletePackageId && deletePackageMutation.mutate(deletePackageId)
+        }
+        onCancel={() => setDeletePackageId(null)}
+        message="Are you sure you want to delete this city? "
+      />
       {/* Forward Dialog */}
       <ForwardDialog
         isOpen={isDialogOpen}

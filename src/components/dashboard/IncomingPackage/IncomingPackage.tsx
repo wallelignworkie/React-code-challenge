@@ -35,13 +35,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import { Agent } from "@/types";
-import { getAgents } from "@/services/agentService";
-import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  acceptIncomingPackage,
+  getIncomingPackage,
+} from "@/services/incomingPackage";
+import { Shipment } from "@/types/incomingPackage";
 
 // Column definitions
-const columns: ColumnDef<Agent>[] = [
+const columns: ColumnDef<Shipment>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -65,19 +67,19 @@ const columns: ColumnDef<Agent>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "firstName",
-    header: "First Name",
-    cell: ({ row }) => <div>{row.original.user.firstName}</div>,
+    accessorKey: "trackingNumber",
+    header: "Tracking Number",
+    cell: ({ row }) => <div>{row.original.package.trackingNumber}</div>,
   },
   {
-    accessorKey: "address",
-    header: "Address",
-    cell: ({ row }) => <div>{row.getValue("address")}</div>,
+    accessorKey: "Receiver Phone",
+    header: "Receiver Phone",
+    cell: ({ row }) => <div>{row.original.package.receiverPhoneNumber}</div>,
   },
   {
-    accessorKey: "address",
-    header: "City",
-    cell: ({ row }) => <div>{row.original.user.address || "N/A"}</div>,
+    accessorKey: "Arrival Time",
+    header: "arrivalTime",
+    cell: ({ row }) => <div>{row.original.arrivalTime || "N/A"}</div>,
     enableColumnFilter: true, // Enable filtering for this column
     filterFn: (row, columnId, value) => {
       const cellValue = row.getValue(columnId) as string | undefined; // Cast to string or undefined
@@ -86,9 +88,9 @@ const columns: ColumnDef<Agent>[] = [
   },
 
   {
-    accessorKey: "phone",
-    header: "Phone",
-    cell: ({ row }) => <div>{row.original.user.phone}</div>,
+    accessorKey: "shipment Information",
+    header: "shipmentInformation",
+    cell: ({ row }) => <div>{row.original.shipmentInfromation}</div>,
   },
   {
     accessorKey: "status",
@@ -96,15 +98,28 @@ const columns: ColumnDef<Agent>[] = [
     cell: ({ row }) => <div>{row.original.status}</div>,
   },
   {
-    accessorKey: "gender",
-    header: "Gender",
-    cell: ({ row }) => <div>{row.original.user.gender}</div>,
+    accessorKey: "Package Name",
+    header: "package name",
+    cell: ({ row }) => <div>{row.original.package.packageName}</div>,
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const packageId = row.original.id;
+      const trackingNumber = row.original.package.trackingNumber;
+
+      const queryClient = useQueryClient();
+      // Mutation for accepting the package
+      const mutation = useMutation({
+        mutationFn: () => acceptIncomingPackage(trackingNumber), // Pass packageId
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["incomingPackages"] });
+        },
+
+        onError: (error: any) => {
+          console.log(error.message);
+        },
+      });
 
       return (
         <DropdownMenu>
@@ -117,11 +132,17 @@ const columns: ColumnDef<Agent>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(packageId)}
+              onClick={() => navigator.clipboard.writeText(trackingNumber)}
             >
               Copy Package ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => mutation.mutate()}
+              disabled={mutation.isPending}
+            >
+              {mutation.isPending ? "Accepting..." : "Accept Package"}
+            </DropdownMenuItem>
             <DropdownMenuItem>View Details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -130,31 +151,26 @@ const columns: ColumnDef<Agent>[] = [
   },
 ];
 
-export default function ManageAgents() {
+export default function IncomingPackage() {
   const {
-    data: agents = [],
+    data: incomingPackages = [],
     isLoading,
     isError,
-  } = useQuery<Agent[]>({
-    queryKey: ["agents"],
-    queryFn: getAgents, // Ensure this function returns Agent[] from the API
+  } = useQuery<Shipment[]>({
+    queryKey: ["incomingPackages"],
+    queryFn: getIncomingPackage, // Ensure this function returns Agent[] from the API
   });
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const navigate = useNavigate();
-  const handleAddAgent = () => {
-    //navigate into Add agent page or roue
-    navigate("/add-agent");
-  };
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const table = useReactTable<Agent>({
-    data: agents, // Use API data here
+  const table = useReactTable<Shipment>({
+    data: incomingPackages, // Use API data here
     columns, // Correctly typed columns for Agent
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -177,20 +193,22 @@ export default function ManageAgents() {
 
   return (
     <div className="w-full bg-white p-4 rounded-lg">
-      <div className=" flex justify-end pr-6">
-        {" "}
-        <Button onClick={handleAddAgent}>+ Add agent</Button>
-      </div>
       <div className="flex items-center py-4">
         {/* Filter input */}
         <Input
           placeholder="Filter by city..."
-          value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("trackingNumber")?.getFilterValue() as string) ??
+            ""
+          }
           onChange={(event) =>
-            table.getColumn("address")?.setFilterValue(event.target.value)
+            table
+              .getColumn("trackingNumber")
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
+
         {/* Dropdown for column visibility */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

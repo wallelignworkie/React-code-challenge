@@ -18,6 +18,7 @@ import ErrorMessage from "@/components/Alert/ErrorMessage";
 import { Button } from "@/components/ui/button";
 import { FormInputs } from "@/types/package";
 import { getCities } from "@/services/cities";
+import { formatPhoneNumber } from "@/utils/formatPhone";
 
 const AddPackageComponent = () => {
   const queryClient = useQueryClient();
@@ -44,17 +45,22 @@ const AddPackageComponent = () => {
     formState: { errors },
   } = useForm<FormInputs>();
 
-  // console.log({ packages });
   const onSubmit: SubmitHandler<FormInputs> = (formData) => {
+    const formattedSenderPhone = formatPhoneNumber(
+      formData.senderPhoneNumber.trim()
+    );
+    const formattedReceiverPhone = formatPhoneNumber(
+      formData.receiverPhoneNumber.trim()
+    );
     const dataToSubmit = {
       ...formData,
+      senderPhoneNumber: formattedSenderPhone,
+      receiverPhoneNumber: formattedReceiverPhone,
       width: parseFloat(formData.width as unknown as string),
       height: parseFloat(formData.height as unknown as string),
       weight: parseFloat(formData.weight as unknown as string),
       length: parseFloat(formData.length as unknown as string),
       price: parseFloat(formData.price as unknown as string),
-      senderLastName: "wale", // Temporary hardcoded values
-      receiverLastName: "wale",
     };
     console.log({ dataToSubmit });
     createPackageMutation.mutate(dataToSubmit);
@@ -100,7 +106,7 @@ const AddPackageComponent = () => {
 
             {/* Sender Information */}
             <div>
-              <Label name="Sender Name" />
+              <Label name="Sender First Name" />
               <Input
                 {...register("senderFirstName", {
                   required: "Sender name is required",
@@ -110,6 +116,19 @@ const AddPackageComponent = () => {
               />
               {errors.senderFirstName && (
                 <p className="text-red-500">{errors.senderFirstName.message}</p>
+              )}
+            </div>
+            <div>
+              <Label name="Sender Lat Name" />
+              <Input
+                {...register("senderLastName", {
+                  required: "Sender name is required",
+                })}
+                placeholder="Sender name"
+                type="text"
+              />
+              {errors.senderLastName && (
+                <p className="text-red-500">{errors.senderLastName.message}</p>
               )}
             </div>
             <div>
@@ -142,17 +161,32 @@ const AddPackageComponent = () => {
 
             {/* Receiver Information */}
             <div>
-              <Label name="Receiver Name" />
+              <Label name="Receiver First Name" />
               <Input
                 {...register("receiverFirstName", {
                   required: "Receiver name is required",
                 })}
-                placeholder="Receiver name"
+                placeholder="Receiver First name"
                 type="text"
               />
               {errors.receiverFirstName && (
                 <p className="text-red-500">
                   {errors.receiverFirstName.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label name="Receiver Last Name" />
+              <Input
+                {...register("receiverLastName", {
+                  required: "Receiver name is required",
+                })}
+                placeholder="Receiver Last name"
+                type="text"
+              />
+              {errors.receiverLastName && (
+                <p className="text-red-500">
+                  {errors.receiverLastName.message}
                 </p>
               )}
             </div>

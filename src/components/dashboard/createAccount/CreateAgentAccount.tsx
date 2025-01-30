@@ -17,28 +17,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getCities } from "@/services/cities";
-
-interface FormInputs {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  phone: string;
-  cityId: string;
-  address: string;
-  gender: string;
-  age: string;
-  handlesUrgent: boolean;
-}
+import { formatPhoneNumber } from "@/utils/formatPhone";
+import { FormInputs } from "@/types/agent";
 
 const CreateAgentAccount = () => {
   const queryClient = useQueryClient();
-  // // Fetch agents
-  // const {
-  //   data: agents = [],
-  //   isLoading,
-  //   isError,
-  // } = useQuery({ queryKey: ["agents"], queryFn: getAgents });
   const {
     data: cities = [],
     isLoading,
@@ -59,10 +42,13 @@ const CreateAgentAccount = () => {
     reset,
     control,
     formState: { errors },
-  } = useForm<FormInputs>();
+  } = useForm<FormInputs>({
+    defaultValues: { handlesUrgent: false },
+  });
 
   const onSubmit: SubmitHandler<FormInputs> = (formData) => {
-    createAgentMutation.mutate(formData);
+    const formattedPhone = formatPhoneNumber(formData.phone.trim());
+    createAgentMutation.mutate({ ...formData, phone: formattedPhone });
     reset();
   };
   if (isLoading) {
@@ -237,15 +223,20 @@ const CreateAgentAccount = () => {
             </div>
 
             <div>
-              <Label name="handleUrgent" />
               <Controller
                 name="handlesUrgent"
                 control={control}
-                rules={{ required: "Handle Urgent is required" }}
+                defaultValue={false} // ✅ Ensure default value is false
+                rules={{
+                  validate: (value) =>
+                    value !== undefined || "Handle Urgent is required",
+                }}
                 render={({ field }) => (
                   <Select
-                    onValueChange={(val) => field.onChange(val === "true")} // Convert string to boolean
-                    value={field.value ? "true" : "false"} // Convert boolean to string
+                    onValueChange={(val) =>
+                      field.onChange(val === "true" ? true : false)
+                    }
+                    value={String(field.value)} // ✅ Ensure correct value format
                   >
                     <SelectTrigger className="w-full bg-gray-100 border border-gray-200 rounded-md">
                       <SelectValue placeholder="Select handleUrgent" />

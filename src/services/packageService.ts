@@ -43,3 +43,21 @@ export const getPackages = async (page: number, pageSize: number) => {
     );
   }
 };
+
+export const DeletePackage = async (id: string): Promise<void> => {
+  try {
+    const response = await axios.delete(
+      `${baseURL}package/delete/${id}`,
+      getHeaders()
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error deleting package:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to delete package"
+    );
+  }
+};

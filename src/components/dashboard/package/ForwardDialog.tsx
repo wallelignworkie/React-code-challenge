@@ -75,6 +75,9 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
       CreateForwardPackage({ trackingNumber, ...data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["forwardPackages"] });
+      setTimeout(() => {
+        onClose();
+      }, 1000);
       return "Package forwarded successfully!";
     },
     onError: () => {

@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import SuccessAlertMessage from "@/components/Alert/SuccessAlertMessage";
 import EditCityComponent from "./EditCityComponent";
-import DeleteConfirmationPopup from "./DeleteConfirmationPopup";
+import DeleteConfirmationPopup from "../../deleteConfirmation/DeleteConfirmationPopup";
 
 interface FormInputs {
   name: string;
