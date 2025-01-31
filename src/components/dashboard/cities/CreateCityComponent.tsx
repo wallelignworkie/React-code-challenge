@@ -26,7 +26,7 @@ const CreateCityComponent: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState<string>(""); // Search input state
   const [currentPage, setCurrentPage] = useState<number>(1); // Pagination state
-  const itemsPerPage = 5; // Number of cities per page
+  const itemsPerPage = 10; // Number of cities per page
   const queryClient = useQueryClient();
 
   // Fetch all cities using React Query
@@ -105,7 +105,7 @@ const CreateCityComponent: React.FC = () => {
 
       <div className="flex justify-between mb-4">
         <h2 className="text-lg font-bold">City List</h2>
-        <Button onClick={() => setShowPopup(true)}>+ Add City</Button>
+        <Button onClick={() => setShowPopup(true)}> + Add City</Button>
       </div>
 
       {/* Search Bar */}

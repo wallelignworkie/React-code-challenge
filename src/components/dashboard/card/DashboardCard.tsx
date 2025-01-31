@@ -4,6 +4,7 @@ import {
   getAgentOverviewData,
 } from "@/services/dashboardService";
 import useUserStore from "@/store/useUserStore";
+import formatNumber from "@/utils/formatNumber";
 import { useQuery } from "@tanstack/react-query";
 
 const DashboardCard = () => {
@@ -44,15 +45,15 @@ const DashboardCard = () => {
     switch (role) {
       case "ADMIN":
         return [
-          { name: "Users", count: data.users ?? 0 },
-          { name: "Packages", count: data.packages ?? 0 },
-          { name: "price", count: data.price ?? 0 },
+          { name: "Users", count: formatNumber(data.users ?? 0) },
+          { name: "Packages", count: formatNumber(data.packages ?? 0) },
+          { name: "price", count: formatNumber(data.price ?? 0) },
         ];
       case "AGENT":
         return [
-          { name: "Users", count: data.users ?? 0 },
-          { name: "Packages", count: data.packages ?? 0 },
-          { name: "Price", count: data.price ?? 0 },
+          { name: "Users", count: formatNumber(data.users ?? 0) },
+          { name: "Packages", count: formatNumber(data.packages ?? 0) },
+          { name: "Price", count: formatNumber(data.price ?? 0) },
         ];
       default:
         return []; // Default for unknown or guest roles

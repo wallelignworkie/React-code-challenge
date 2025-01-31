@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DashboardPage from "@/page/DashboardPage";
-import AgentAddPackage from "@/page/AddPackage";
 import Homepage from "@/page/Homepage";
 import LoginPage from "@/page/LoginPage";
 import RegistrationPage from "@/page/RegistrationPage";
@@ -15,6 +14,8 @@ import CreateAgentAccountPage from "@/page/CreateAgentAccountPage";
 import DashboardAgentsPage from "@/page/DashboardAgentsPage";
 import IncomingPackages from "@/page/IncomingPackages";
 import ProtectedRoute from "./ProtectedRoute";
+import AgentDetailPage from "@/page/AgentDetailPage";
+import SettingPage from "@/page/SettingPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -24,14 +25,12 @@ const AppRoute: React.FC = () => {
         <Route path="/" element={<Homepage />} />
         <Route path="/signin" element={<LoginPage />} />
         <Route path="/signup" element={<RegistrationPage />} />
-
-        <Route path="/add-package" element={<AgentAddPackage />} />
         <Route
           path="/search-result/:trackingNumber"
           element={<TrackingComponent />}
         />
 
-        {/* latest route */}
+        {/* Both Admin and Agent route */}
         <Route
           path="/dashboard"
           element={
@@ -82,6 +81,24 @@ const AppRoute: React.FC = () => {
           }
         />
         <Route
+          path="/agent-detail/:id"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}>
+              <AgentDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/setting"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}>
+              <SettingPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Routes */}
+        <Route
           path="/cities"
           element={
             <ProtectedRoute allowedRoles={["ADMIN"]}>
@@ -97,6 +114,8 @@ const AppRoute: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* Agent Routes */}
         <Route
           path="/incoming-packages"
           element={

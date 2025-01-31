@@ -223,6 +223,7 @@ const CreateAgentAccount = () => {
             </div>
 
             <div>
+              <Label name="Handle Urgent " />
               <Controller
                 name="handlesUrgent"
                 control={control}

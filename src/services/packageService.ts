@@ -44,6 +44,7 @@ export const getPackages = async (page: number, pageSize: number) => {
   }
 };
 
+// package/delete/${id}
 export const DeletePackage = async (id: string): Promise<void> => {
   try {
     const response = await axios.delete(
@@ -58,6 +59,26 @@ export const DeletePackage = async (id: string): Promise<void> => {
     );
     throw new Error(
       error.response?.data?.message || "Failed to delete package"
+    );
+  }
+};
+
+// package/deliver/94656121245
+export const deliverPackage = async (trackingNumber: string): Promise<void> => {
+  try {
+    const response = await axios.post(
+      `${baseURL}package/deliver/${trackingNumber}`,
+      {},
+      getHeaders()
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error deliver package",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to deliver package"
     );
   }
 };

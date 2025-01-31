@@ -35,3 +35,19 @@ export const getAgents = async (): Promise<Agent[]> => {
     throw new Error(error.response?.data?.message || "Failed to fetch agents");
   }
 };
+
+export const getAgent = async (id: string): Promise<Agent[]> => {
+  try {
+    const response = await axios.get(
+      `${baseURL}agent/find-one/${id}`,
+      getHeaders()
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error fetching agent:",
+      error.response?.data || error.message
+    );
+    throw new Error(error.response?.data?.message || "Failed to fetch agent");
+  }
+};

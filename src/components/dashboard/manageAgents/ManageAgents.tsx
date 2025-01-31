@@ -105,7 +105,11 @@ const columns: ColumnDef<Agent>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const packageId = row.original.id;
-
+      const navigate = useNavigate();
+      const handleAgentDetail = () => {
+        navigate(`/agent-detail/${packageId}`);
+        console.log("Agent detail page", packageId);
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -122,7 +126,10 @@ const columns: ColumnDef<Agent>[] = [
               Copy Package ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleAgentDetail}>
+              {" "}
+              View Details
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -131,6 +138,8 @@ const columns: ColumnDef<Agent>[] = [
 ];
 
 export default function ManageAgents() {
+  const navigate = useNavigate();
+
   const {
     data: agents = [],
     isLoading,
@@ -144,9 +153,7 @@ export default function ManageAgents() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const navigate = useNavigate();
   const handleAddAgent = () => {
-    //navigate into Add agent page or roue
     navigate("/add-agent");
   };
   const [columnVisibility, setColumnVisibility] =

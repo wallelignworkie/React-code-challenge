@@ -11,7 +11,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { DeletePackage, getPackages } from "@/services/packageService";
+import {
+  DeletePackage,
+  deliverPackage,
+  getPackages,
+} from "@/services/packageService";
 import { Package } from "@/types";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
@@ -127,8 +131,22 @@ export default function PackagesComponent() {
       },
       {
         id: "actions",
+        enableHiding: false,
         cell: ({ row }) => {
           const packageData = row.original;
+
+          const queryClient = useQueryClient();
+          // Mutation for accepting the package
+          const deliverMutation = useMutation({
+            mutationFn: () => deliverPackage(packageData.trackingNumber), // Pass packageId
+            onSuccess: () => {
+              queryClient.invalidateQueries({ queryKey: ["deliverPackage"] });
+            },
+
+            onError: (error: any) => {
+              console.log(error.message);
+            },
+          });
 
           return (
             <DropdownMenu>
@@ -153,6 +171,12 @@ export default function PackagesComponent() {
                   Forward
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => deliverMutation.mutate()}
+                  disabled={deliverMutation.isPending}
+                >
+                  {deliverMutation.isPending ? "loading..." : "Deliver Package"}
+                </DropdownMenuItem>
                 <DropdownMenuItem>Edit</DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setDeletePackageId(packageData.id)}
