@@ -271,7 +271,7 @@ const EditAgent: React.FC = () => {
                     onValueChange={(val) =>
                       field.onChange(val === "true" ? true : false)
                     }
-                    value={String(field.value)} // ✅ Ensure correct value format
+                    value={String(field.value)}
                   >
                     <SelectTrigger className="w-full bg-gray-100 border border-gray-200 rounded-md">
                       <SelectValue placeholder="Select handleUrgent" />
