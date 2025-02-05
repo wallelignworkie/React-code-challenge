@@ -16,7 +16,6 @@ import {
   deliverPackage,
   getPackages,
 } from "@/services/packageService";
-import { Package } from "@/types";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -43,6 +42,8 @@ import ForwardDialog from "./ForwardDialog";
 import DeleteConfirmationPopup from "../../deleteConfirmation/DeleteConfirmationPopup";
 import SuccessAlertMessage from "@/components/Alert/SuccessAlertMessage";
 import ErrorMessage from "@/components/Alert/ErrorMessage";
+import { useNavigate } from "react-router-dom";
+import { Package } from "@/types/package";
 
 export default function PackagesComponent() {
   const [page, setPage] = React.useState(1);
@@ -132,6 +133,7 @@ export default function PackagesComponent() {
       {
         id: "actions",
         enableHiding: false,
+
         cell: ({ row }) => {
           const packageData = row.original;
 
@@ -147,7 +149,10 @@ export default function PackagesComponent() {
               console.log(error.message);
             },
           });
-
+          const navigate = useNavigate();
+          const handlePackageDetailPage = () => {
+            navigate(`/package-detail/${packageData.id}`);
+          };
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -183,7 +188,9 @@ export default function PackagesComponent() {
                 >
                   Delete
                 </DropdownMenuItem>
-                <DropdownMenuItem>View Details</DropdownMenuItem>
+                <DropdownMenuItem onClick={handlePackageDetailPage}>
+                  View Details
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           );
@@ -210,6 +217,7 @@ export default function PackagesComponent() {
 
   return (
     <div className="w-full bg-white p-4 rounded-lg">
+      <h3 className=" -mb-5 font-semibold text-xl">Packages</h3>
       {deletePackageMutation.isError && (
         <ErrorMessage user_text={deletePackageMutation.error.message} />
       )}

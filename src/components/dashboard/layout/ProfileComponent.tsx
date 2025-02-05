@@ -4,7 +4,7 @@ import profileImage from "../../../assets/images/engida-express-logo1.jpg";
 import useUserStore from "@/store/useUserStore";
 const ProfileComponent = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const { clearAuth } = useUserStore();
+  const { clearAuth, user } = useUserStore();
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -21,7 +21,7 @@ const ProfileComponent = () => {
   }, [isDropdownOpen]);
 
   const handleProfileClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevents the event from propagating to the window
+    e.stopPropagation();
     setDropdownOpen(!isDropdownOpen);
   };
 
@@ -40,23 +40,33 @@ const ProfileComponent = () => {
           {/* <span>Admin</span> */}
         </button>
         {isDropdownOpen && (
-          <Card className="absolute right-0 mt-2 w-48 bg-white shadow-lg">
+          <Card className="absolute right-0 mt-2 w-56  z-50 bg-white  rounded-md shadow-lg">
             <div className=" px-4 pt-3">
-              <span className="  text-black font-semibold">walleman</span>
+              <span className="  text-black font-semibold">{user?.email}</span>
             </div>
-            <ul className="py-2 -pt-1">
-              <li className="px-4 py-2 hover:bg-gray-100">
-                <a href="#">Home</a>
+            <ul className="py-2">
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                <a href="/dashboard" className="block w-full h-full text-left">
+                  Home
+                </a>
               </li>
-
-              <li className="px-4 py-2 hover:bg-gray-100">
-                <a href="#">Profile</a>
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                <a href="#" className="block w-full h-full text-left">
+                  Profile
+                </a>
               </li>
-              <li className="px-4 py-2 hover:bg-gray-100">
-                <a href="#">Settings</a>
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                <a href="/setting" className="block w-full h-full text-left">
+                  Settings
+                </a>
               </li>
-              <li className="px-4 py-2 hover:bg-gray-100">
-                <button onClick={clearAuth}>Logout</button>
+              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                <button
+                  onClick={clearAuth}
+                  className="block w-full h-full text-left"
+                >
+                  Logout
+                </button>
               </li>
             </ul>
           </Card>

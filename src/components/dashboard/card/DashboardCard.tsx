@@ -37,8 +37,6 @@ const DashboardCard = () => {
   const overviewData =
     effectiveRole === "ADMIN" ? adminOverviewData : agentOverviewData;
 
-  console.log({ overviewData });
-
   const getCardsByRole = (role: string, data: any) => {
     if (!data) return [];
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getHeaders } from "./accessToken";
-import { PackageRequest, PackageResponse } from "@/types/package";
+import { Package, PackageRequest, PackageResponse } from "@/types/package";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 export const CreatePackage = async (
@@ -79,6 +79,25 @@ export const deliverPackage = async (trackingNumber: string): Promise<void> => {
     );
     throw new Error(
       error.response?.data?.message || "Failed to deliver package"
+    );
+  }
+};
+
+// package/find-one/cm5tv68uk0000ls5wfg245m0q
+export const PackageDetail = async (id: string): Promise<Package> => {
+  try {
+    const response = await axios.get<Package>(
+      `${baseURL}package/find-one/${id}`,
+      getHeaders()
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error finding package",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to find one package"
     );
   }
 };

@@ -19,7 +19,7 @@ const DashboardComponent: React.FC = () => {
         <DashboardCard />
 
         <div>
-          <h3 className="text-2xl font-semibold mb-4">Recent Activities</h3>
+          <h3 className="text-2xl font-semibold mb-4">Login History</h3>
           <div className=" bg-white p-6">
             <RecentActivity />
           </div>

@@ -1,36 +1,79 @@
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { getMyProfile } from "@/services/settingSrvice";
+
+import { useQuery } from "@tanstack/react-query";
+import { MyProfile } from "@/types/profile";
+import EditSettingComponent from "./EditSettingComponent";
 
 const SettingComponent = () => {
+  const { data, isLoading, isError } = useQuery<MyProfile>({
+    queryKey: ["myProfile"],
+    queryFn: () => getMyProfile(),
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error fetching data</div>;
+
   return (
-    <div className=" border border-gray-200 p-12 bg-white max-w-xl rounded-lg">
-      <div className=" py-2">
-        <Label> Current Password</Label>
-        <Input
-          className=" py-2"
-          type=" password"
-          placeholder=" Enter your current password"
-        />
-      </div>
-      <div className=" py-2">
-        <Label> New Password</Label>
-        <Input
-          className=""
-          type=" password"
-          placeholder=" Enter your new password"
-        />
-      </div>
-      <div className=" px-2 py-2">
-        <Label> Confirm Password</Label>
-        <Input
-          className=""
-          type=" password"
-          placeholder=" Enter Confirm password"
-        />
-      </div>
-      <div className=" pt-5 flex justify-end mt-5">
-        <Button className=" bg-EPrimary"> Save Change</Button>
+    <div className=" min-h-screen w-full">
+      <div className="w-4xl bg-white rounded-xl shadow-md p-6 sm:p-8">
+        <div className=" flex justify-between">
+          <h1 className="text-2xl  text-gray-900 font-semibold">
+            Account Settings
+          </h1>
+          <div className="flex justify-center ">
+            <EditSettingComponent />
+          </div>
+        </div>
+        <hr className="my-6" />
+
+        <div>
+          <span className="text-base text-gray-900  font-semibold">Email</span>
+          <p className="text-gray-700 font-medium">{data?.email}</p>
+        </div>
+        <div className=" mt-8">
+          <span className="text-base text-gray-900  font-semibold">Phone</span>
+          <p className="text-gray-700 font-medium">{data?.phone}</p>
+        </div>
+
+        <hr className="my-6" />
+
+        <div>
+          <span className="text-base text-gray-900  font-semibold">
+            First Name
+          </span>
+          <p className="text-gray-700 font-medium">{data?.firstName}</p>
+        </div>
+        <div className=" mt-8">
+          <span className="text-base text-gray-900  font-semibold">
+            Last Name
+          </span>
+          <p className="text-gray-700 font-medium">{data?.lastName}</p>
+        </div>
+
+        <hr className="my-6" />
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div>
+            <span className="text-base text-gray-900  font-semibold">
+              Address
+            </span>
+            <p className="text-gray-700 font-medium">{data?.address}</p>
+          </div>
+          <div>
+            <span className="text-base text-gray-900  font-semibold">
+              Gender
+            </span>
+            <p className="text-gray-700 font-medium">{data?.gender}</p>
+          </div>
+          <div>
+            <span className="text-base text-gray-900  font-semibold">
+              Handles Urgent Requests
+            </span>
+            <p className="text-gray-700 font-medium">
+              {data?.agent?.handles_urgent ? "Yes" : "No"}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

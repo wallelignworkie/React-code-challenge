@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
 }) => {
   const { role } = useUserStore();
-  console.log({ role });
+  // console.log({ role });
 
   if (!role) {
     // If no role, redirect to login

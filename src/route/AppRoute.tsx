@@ -6,7 +6,6 @@ import LoginPage from "@/page/LoginPage";
 import RegistrationPage from "@/page/RegistrationPage";
 import TrackingComponent from "@/components/homepage/TrackingComponent";
 import ReportPage from "@/page/ReportPage";
-import DashboardUsersPage from "@/page/DashboardUsersPage";
 import PackagePage from "@/page/PackagePage";
 import AddPackage from "@/page/AddPackage";
 import CreateCityPage from "@/page/CreateCityPage";
@@ -16,6 +15,9 @@ import IncomingPackages from "@/page/IncomingPackages";
 import ProtectedRoute from "./ProtectedRoute";
 import AgentDetailPage from "@/page/AgentDetailPage";
 import SettingPage from "@/page/SettingPage";
+import AgentEditPage from "@/page/AgentEditPage";
+import PackageDetailPage from "@/page/PackageDetailPage";
+import DashboardCustomersPage from "@/page/DashboardCustomersPage";
 
 const AppRoute: React.FC = () => {
   return (
@@ -40,10 +42,10 @@ const AppRoute: React.FC = () => {
           }
         />
         <Route
-          path="/users"
+          path="/customers"
           element={
             <ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}>
-              <DashboardUsersPage />
+              <DashboardCustomersPage />
             </ProtectedRoute>
           }
         />
@@ -85,6 +87,23 @@ const AppRoute: React.FC = () => {
           element={
             <ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}>
               <AgentDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* agent-edit */}
+        <Route
+          path="/agent-edit/:id"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}>
+              <AgentEditPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/package-detail/:id"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}>
+              <PackageDetailPage />
             </ProtectedRoute>
           }
         />

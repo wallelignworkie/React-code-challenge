@@ -16,6 +16,7 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { setRole } = useUserStore();
+  const { setUser } = useUserStore();
   const navigate = useNavigate();
   console.log({ baseUrl });
   const handleLogin = async (event: React.FormEvent) => {
@@ -31,8 +32,8 @@ const Login: React.FC = () => {
       // Extract data from the API response
       const { role } = response.data;
       const { access_token, refresh_token } = response;
-
-      console.log("Role:", role);
+      const user = response.data;
+      console.log({ response });
 
       // Save tokens in localStorage
       localStorage.setItem("access_token", access_token);
@@ -40,6 +41,7 @@ const Login: React.FC = () => {
 
       // Set role in Zustand state
       setRole(role);
+      setUser(user);
 
       // Navigate based on role
       if (role === "ADMIN" || role === "AGENT") {

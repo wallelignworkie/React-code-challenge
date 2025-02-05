@@ -54,7 +54,7 @@ export const getSidebarElementsByRole = (
           <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
         </svg>
       ),
-      link: "/users",
+      link: "/customers",
     },
     {
       name: "Packages",

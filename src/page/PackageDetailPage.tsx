@@ -1,8 +1,8 @@
 import HeaderComponent from "@/components/dashboard/layout/HeaderComponent";
 import SidebarComponent from "@/components/dashboard/layout/SidebarComponent";
-import UsersComponent from "@/components/dashboard/users/UsersComponent";
+import PackageDetailComponent from "@/components/dashboard/package/PackageDetailComponent";
 
-const DashboardAgentsPage = () => {
+const PackageDetailPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-row">
       {/* Sidebar */}
@@ -11,10 +11,10 @@ const DashboardAgentsPage = () => {
       {/* Main Content */}
       <main className="flex-1 p-6 ">
         <HeaderComponent />
-        <UsersComponent />
+        <PackageDetailComponent />
       </main>
     </div>
   );
 };
 
-export default DashboardAgentsPage;
+export default PackageDetailPage;

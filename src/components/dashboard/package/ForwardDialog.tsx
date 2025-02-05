@@ -22,16 +22,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CreateForwardPackage } from "@/services/forwardPackage";
-import { Agent } from "@/types";
 import { getAgents } from "@/services/agentService";
 import { Label } from "@/components/ui/label";
 import ErrorMessage from "@/components/Alert/ErrorMessage";
 import SuccessAlertMessage from "@/components/Alert/SuccessAlertMessage";
+import { Agent } from "@/types/agent";
 
 type ForwardDialogProps = {
   isOpen: boolean;
   onClose: () => void;
-  trackingNumber: string; // Pass the package tracking number
+  trackingNumber: string;
 };
 
 type ForwardFormData = {

@@ -1,8 +1,8 @@
+import CustomerComponents from "@/components/dashboard/Customers/CustomerComponents";
 import HeaderComponent from "@/components/dashboard/layout/HeaderComponent";
 import SidebarComponent from "@/components/dashboard/layout/SidebarComponent";
-import SettingComponent from "@/components/setting/SettingComponent";
 
-const SettingPage = () => {
+const DashboardCustomersPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-row">
       {/* Sidebar */}
@@ -11,10 +11,10 @@ const SettingPage = () => {
       {/* Main Content */}
       <main className="flex-1 p-6 ">
         <HeaderComponent />
-        <SettingComponent />
+        <CustomerComponents />
       </main>
     </div>
   );
 };
 
-export default SettingPage;
+export default DashboardCustomersPage;
