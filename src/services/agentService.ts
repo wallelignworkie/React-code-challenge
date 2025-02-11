@@ -88,3 +88,21 @@ export const UpdateAgent = async (
     throw new Error(error?.response?.data?.message || "Failed to update agent");
   }
 };
+
+// agent/find-by-city/dire_dawa
+export const getAgentsByCity = async (cityId: string): Promise<Agent[]> => {
+  try {
+    if (!cityId) return Promise.resolve([]);
+    const response = await axios.get(
+      `${baseURL}agent/find-by-city/${cityId}`,
+      getHeaders()
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error fetching agent:",
+      error.response?.data || error.message
+    );
+    throw new Error(error.response?.data?.message || "Failed to fetch agent");
+  }
+};

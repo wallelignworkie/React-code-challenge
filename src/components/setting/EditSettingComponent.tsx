@@ -61,7 +61,10 @@ const EditSettingComponent = () => {
       <DialogTrigger asChild>
         <Button variant="outline">Edit Profile</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[650px]">
+      <DialogContent
+        aria-description="edit-profile"
+        className="sm:max-w-[650px]"
+      >
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
           {updateProfileMutation.error && (

@@ -28,7 +28,7 @@ const AddPackageComponent = () => {
     isLoading,
     isError,
   } = useQuery({ queryKey: ["cities"], queryFn: getCities });
-  console.log({ cities });
+  // console.log({ cities });
 
   const createPackageMutation = useMutation({
     mutationFn: CreatePackage,

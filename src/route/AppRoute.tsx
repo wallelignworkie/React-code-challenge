@@ -18,6 +18,7 @@ import SettingPage from "@/page/SettingPage";
 import AgentEditPage from "@/page/AgentEditPage";
 import PackageDetailPage from "@/page/PackageDetailPage";
 import DashboardCustomersPage from "@/page/DashboardCustomersPage";
+import ForwardPackages from "@/page/ForwardPackages";
 
 const AppRoute: React.FC = () => {
   return (
@@ -100,6 +101,15 @@ const AppRoute: React.FC = () => {
           }
         />
         <Route
+          path="/package-edit/:id"
+          element={
+            <ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}>
+              <AddPackage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/package-detail/:id"
           element={
             <ProtectedRoute allowedRoles={["ADMIN", "AGENT"]}>
@@ -107,6 +117,7 @@ const AppRoute: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/setting"
           element={
@@ -140,6 +151,14 @@ const AppRoute: React.FC = () => {
           element={
             <ProtectedRoute allowedRoles={["AGENT"]}>
               <IncomingPackages />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/forward-packages"
+          element={
+            <ProtectedRoute allowedRoles={["AGENT"]}>
+              <ForwardPackages />
             </ProtectedRoute>
           }
         />

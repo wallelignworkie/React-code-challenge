@@ -45,7 +45,7 @@ import ErrorMessage from "@/components/Alert/ErrorMessage";
 import { useNavigate } from "react-router-dom";
 import { Package } from "@/types/package";
 
-export default function PackagesComponent() {
+export default function ForwardPackagesComponent() {
   const [page, setPage] = React.useState(1);
   const [pageSize] = React.useState(10); // Set per-page size
 
@@ -53,7 +53,7 @@ export default function PackagesComponent() {
     queryKey: ["packages", page],
     queryFn: () => getPackages(page, pageSize),
     placeholderData: (previousData) => previousData,
-    refetchInterval: 2000,
+    refetchInterval: 3000,
   });
 
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
@@ -152,9 +152,6 @@ export default function PackagesComponent() {
           const handlePackageDetailPage = () => {
             navigate(`/package-detail/${packageData.id}`);
           };
-          const handleEdit = () => {
-            navigate(`/package-edit/${packageData.id}`);
-          };
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -184,7 +181,7 @@ export default function PackagesComponent() {
                 >
                   {deliverMutation.isPending ? "loading..." : "Deliver Package"}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+                <DropdownMenuItem>Edit</DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setDeletePackageId(packageData.id)}
                 >
@@ -219,7 +216,7 @@ export default function PackagesComponent() {
 
   return (
     <div className="w-full bg-white p-4 rounded-lg">
-      <h3 className=" -mb-1 font-semibold text-xl">Packages</h3>
+      <h3 className=" -mb-1 font-semibold text-xl"> Forward Packages</h3>
       {deletePackageMutation.isError && (
         <ErrorMessage user_text={deletePackageMutation.error.message} />
       )}

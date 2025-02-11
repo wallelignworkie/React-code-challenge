@@ -22,11 +22,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CreateForwardPackage } from "@/services/forwardPackage";
-import { getAgents } from "@/services/agentService";
+import { getAgentsByCity } from "@/services/agentService";
 import { Label } from "@/components/ui/label";
 import ErrorMessage from "@/components/Alert/ErrorMessage";
 import SuccessAlertMessage from "@/components/Alert/SuccessAlertMessage";
 import { Agent } from "@/types/agent";
+import { getCities } from "@/services/cities";
 
 type ForwardDialogProps = {
   isOpen: boolean;
@@ -46,6 +47,22 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
   trackingNumber,
 }) => {
   const {
+    data: cities = [],
+    isLoading: isCitiesLoading,
+    isError: isCitiesError,
+  } = useQuery({ queryKey: ["cities"], queryFn: getCities });
+
+  const [selectedCityId, setSelectedCityId] = React.useState<
+    string | undefined
+  >(undefined);
+  const [search, setSearch] = React.useState<string>("");
+
+  // Filter cities based on the search query
+  const filteredCities = cities.filter((city) =>
+    city.name.toLowerCase().includes(search.toLowerCase())
+  );
+  const currentDate = new Date().toISOString().slice(0, 16);
+  const {
     handleSubmit,
     control,
     reset,
@@ -62,13 +79,16 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
 
   const {
     data: agents = [],
-    isLoading,
-    isError,
+    isLoading: isAgentsLoading,
+    isError: isAgentsError,
   } = useQuery<Agent[]>({
-    queryKey: ["agents"],
-    queryFn: getAgents,
+    queryKey: ["agents", selectedCityId],
+    queryFn: async () => {
+      if (!selectedCityId) return Promise.resolve([]);
+      return getAgentsByCity(selectedCityId);
+    },
+    enabled: !!selectedCityId,
   });
-  console.log({ trackingNumber });
 
   const forwardMutation = useMutation({
     mutationFn: (data: ForwardFormData) =>
@@ -84,6 +104,7 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
       return "Error forwarding package";
     },
   });
+
   const onSubmit = (data: ForwardFormData) => {
     const payload = { trackingNumber, ...data };
     forwardMutation.mutate(payload);
@@ -91,8 +112,6 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
     console.log("payload:", payload);
     console.log("Submitted Data:", { trackingNumber, ...data });
   };
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading data.</div>;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -103,15 +122,53 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
             {forwardMutation.isPending && " Loading..."}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {forwardMutation.isError && (
             <ErrorMessage user_text={forwardMutation.error?.message} />
           )}
           {forwardMutation.isSuccess && (
             <SuccessAlertMessage
-              user_text={"You have Forwarding Successfully"}
+              user_text={"You have Forwarded Successfully"}
             />
           )}
+          <div>
+            <Label> Select City you want Forwarding...</Label>
+            <Select
+              onValueChange={(value) => setSelectedCityId(value)}
+              value={selectedCityId}
+            >
+              <SelectTrigger className="w-full bg-gray-100 border border-gray-200 rounded-md">
+                <SelectValue placeholder="Select a City" />
+              </SelectTrigger>
+              <SelectContent className="max-h-60 overflow-y-auto scrollbar">
+                <div className="p-2">
+                  <Input
+                    placeholder="Search cities"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full border border-gray-300 rounded-md p-2"
+                  />
+                </div>
+
+                <SelectGroup>
+                  <SelectLabel>Select a City</SelectLabel>
+                  {filteredCities.length > 0 ? (
+                    filteredCities.map((city) => (
+                      <SelectItem key={city.id} value={city.id}>
+                        {city.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="p-2">No cities found</div>
+                  )}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <div>{isCitiesLoading && <div>Loading...</div>}</div>
+            <div>{isCitiesError && <div>Error Loading Cities...</div>}</div>
+          </div>
+
           <div>
             <Label>Receive agent</Label>
             <Controller
@@ -125,7 +182,7 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>select Receive agent</SelectLabel>
+                      <SelectLabel>Select Receive agent</SelectLabel>
                       {agents.map((agent) => (
                         <SelectItem key={agent.id} value={agent.userId}>
                           {agent.user.firstName}
@@ -141,6 +198,8 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
                 {errors.destinationAgentId?.message}
               </p>
             )}
+            <div>{isAgentsLoading && <div>Loading...</div>}</div>
+            <div>{isAgentsError && <div>Error Loading Agent...</div>}</div>
           </div>
 
           <div>
@@ -173,14 +232,10 @@ const ForwardDialog: React.FC<ForwardDialogProps> = ({
                   type="datetime-local"
                   {...field}
                   className={errors.arrivalTime ? "border-red-500" : ""}
+                  min={currentDate} // Disable past dates
                 />
               )}
             />
-            {errors.arrivalTime && (
-              <p className="text-red-500 text-sm">
-                {errors.arrivalTime.message}
-              </p>
-            )}
           </div>
 
           <div className="flex justify-end space-x-2">
