@@ -1,6 +1,11 @@
 import axios from "axios";
 import { getHeaders } from "./accessToken";
-import { Package, PackageRequest, PackageResponse } from "@/types/package";
+import {
+  Package,
+  PackageData,
+  PackageRequest,
+  PackageResponse,
+} from "@/types/package";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 export const CreatePackage = async (
@@ -98,6 +103,29 @@ export const PackageDetail = async (id: string): Promise<Package> => {
     );
     throw new Error(
       error.response?.data?.message || "Failed to find one package"
+    );
+  }
+};
+
+export const UpdatePackage = async (
+  id: string,
+  data: PackageRequest
+): Promise<PackageData> => {
+  if (!id) throw new Error("package userId is required");
+  if (!data) throw new Error("package data is required");
+
+  try {
+    const response = await axios.patch(
+      `${baseURL}package/update/${id}`,
+      data,
+      getHeaders()
+    );
+    console.log({ data });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error updating package:", error);
+    throw new Error(
+      error?.response?.data?.message || "Failed to update package"
     );
   }
 };
