@@ -1,28 +1,31 @@
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { usePackageStore } from "@/store/usePackageStore";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-
-import { useEditPackageStore } from "@/store/useEditPackageStore";
-import { FormInputs } from "@/types/package"; // Import both interfaces
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { setPackageData } from "@/store/editPackageSlice";
 import { PackageDetail } from "@/services/packageService";
+import { FormInputs } from "@/types/package";
+import { setFormData } from "@/store/packageSlice";
 
 const StepOne = ({ nextStep }: { nextStep: () => void }) => {
-  const { formData, setFormData } = usePackageStore();
-  const { id } = useParams<{ id: string }>(); // Get package ID if editing
-  const { setPackageData } = useEditPackageStore(); // Zustand store
+  const dispatch = useDispatch();
+  const { id } = useParams<{ id: string }>();
+
+  // Get package form data from Redux
+  const packageData = useSelector((state: RootState) => state.package.formData);
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<FormInputs>({ defaultValues: formData });
+  } = useForm<FormInputs>({ defaultValues: packageData });
 
   // Fetch package data if editing
   const {
@@ -35,9 +38,9 @@ const StepOne = ({ nextStep }: { nextStep: () => void }) => {
     enabled: !!id,
   });
 
-  // Convert `Package` to `FormInputs`
   useEffect(() => {
     if (fetchedPackage) {
+      // ✅ Convert `from` and `to` from objects to IDs
       const transformedData: FormInputs = {
         packageName: fetchedPackage.packageName,
         width: fetchedPackage.width,
@@ -45,8 +48,8 @@ const StepOne = ({ nextStep }: { nextStep: () => void }) => {
         weight: fetchedPackage.weight,
         length: fetchedPackage.length,
         priority: fetchedPackage.priority,
-        from: fetchedPackage.from.id, // Extract city name
-        to: fetchedPackage.to.id, // Extract city name
+        from: fetchedPackage.from?.id || "", // Extract only the ID
+        to: fetchedPackage.to?.id || "", // Extract only the ID
         senderFirstName: fetchedPackage.senderFirstName,
         senderLastName: fetchedPackage.senderLastName,
         senderPhoneNumber: fetchedPackage.senderPhoneNumber,
@@ -56,21 +59,21 @@ const StepOne = ({ nextStep }: { nextStep: () => void }) => {
         receiverPhoneNumber: fetchedPackage.receiverPhoneNumber,
         receiverAddress: fetchedPackage.receiverAddress,
         price: fetchedPackage.price,
-        paymentType: "ONDELIVERY", // Ensure it's set correctly (since it's not in `Package`)
+        paymentType: "ONDELIVERY", // Default value
       };
 
-      // Store transformed data in Zustand
-      setPackageData(fetchedPackage);
+      // ✅ Dispatch transformed data to Redux
+      dispatch(setPackageData(fetchedPackage));
 
-      // Set form values
+      // ✅ Set transformed form values
       Object.entries(transformedData).forEach(([key, value]) => {
         setValue(key as keyof FormInputs, value ?? "");
       });
     }
-  }, [fetchedPackage]);
+  }, [fetchedPackage, dispatch, setValue]);
 
-  const onSubmit = (data: FormInputs) => {
-    setFormData(data); // Save to Zustand
+  const onSubmit = (data: any) => {
+    dispatch(setFormData(data));
     nextStep();
   };
 
@@ -90,7 +93,6 @@ const StepOne = ({ nextStep }: { nextStep: () => void }) => {
               <Input
                 {...register("senderFirstName", { required: "Required" })}
                 placeholder="Sender first name"
-                type="text"
               />
               {errors.senderFirstName && (
                 <p className="text-red-500">{errors.senderFirstName.message}</p>
@@ -101,7 +103,6 @@ const StepOne = ({ nextStep }: { nextStep: () => void }) => {
               <Input
                 {...register("senderLastName", { required: "Required" })}
                 placeholder="Sender last name"
-                type="text"
               />
               {errors.senderLastName && (
                 <p className="text-red-500">{errors.senderLastName.message}</p>
@@ -119,7 +120,6 @@ const StepOne = ({ nextStep }: { nextStep: () => void }) => {
                   },
                 })}
                 placeholder="Sender mobile"
-                type="text"
               />
               {errors.senderPhoneNumber && (
                 <p className="text-red-500">

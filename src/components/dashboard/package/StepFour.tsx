@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { getCities } from "@/services/cities";
-import { Divide } from "lucide-react";
+import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setFormData } from "@/store/packageSlice";
 
 const StepFour = ({
   nextStep,
@@ -23,7 +25,8 @@ const StepFour = ({
   nextStep: () => void;
   prevStep: () => void;
 }) => {
-  const { formData, setFormData } = usePackageStore();
+  const dispatch = useDispatch();
+  const packageData = useSelector((state: RootState) => state.package.formData);
   const [cityError, setCityError] = useState<string | null>(null); // Custom error state
 
   const {
@@ -37,7 +40,7 @@ const StepFour = ({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm({ defaultValues: formData });
+  } = useForm({ defaultValues: packageData });
 
   const onSubmit = (data: any) => {
     if (data.from === data.to) {
@@ -46,7 +49,7 @@ const StepFour = ({
     }
 
     setCityError(null); // Clear error if valid
-    setFormData(data);
+    dispatch(setFormData(data));
     nextStep();
   };
 

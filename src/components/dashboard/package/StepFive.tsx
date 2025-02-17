@@ -2,26 +2,23 @@ import ErrorMessage from "@/components/Alert/ErrorMessage";
 import SuccessAlertMessage from "@/components/Alert/SuccessAlertMessage";
 import { Button } from "@/components/ui/button";
 import { CreatePackage, UpdatePackage } from "@/services/packageService";
-import { usePackageStore } from "@/store/usePackageStore";
+import { RootState } from "@/store/store";
 import { FormInputs, PackageRequest } from "@/types/package";
 import { formatPhoneNumber } from "@/utils/formatPhone";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const StepFive = ({ prevStep }: { prevStep: () => void }) => {
   const queryClient = useQueryClient();
-  const { formData } = usePackageStore(); // Zustand store
+  const packageData = useSelector((state: RootState) => state.package.formData);
 
-  const {
-    handleSubmit,
-    reset,
-    register, // Ensure all inputs are controlled by react-hook-form
-  } = useForm<FormInputs>({
-    defaultValues: formData, // Persist previous form values
+  const { handleSubmit, reset } = useForm<FormInputs>({
+    defaultValues: packageData, // Persist previous form values
   });
 
-  const { id } = useParams<{ id?: string }>(); // Get package ID if editing
+  const { id } = useParams<{ id?: string }>();
 
   // Mutations for create and update
   const updatePackageMutation = useMutation({
@@ -98,7 +95,7 @@ const StepFive = ({ prevStep }: { prevStep: () => void }) => {
 
       {/* Display Form Data */}
       <pre className="bg-gray-100 p-4 rounded-md">
-        {JSON.stringify(formData, null, 2)}
+        {JSON.stringify(packageData, null, 2)}
       </pre>
 
       {/* Success & Error Messages */}

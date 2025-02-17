@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { usePackageStore } from "@/store/usePackageStore";
 import { Button } from "@/components/ui/button";
 import Label from "../../label/Label";
+import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setFormData } from "@/store/packageSlice";
 
 const StepThree = ({
   nextStep,
@@ -11,16 +13,17 @@ const StepThree = ({
   nextStep: () => void;
   prevStep: () => void;
 }) => {
-  const { formData, setFormData } = usePackageStore();
+  const dispatch = useDispatch();
+  const packageData = useSelector((state: RootState) => state.package.formData);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: formData });
+  } = useForm({ defaultValues: packageData });
 
   const onSubmit = (data: any) => {
-    setFormData(data);
+    dispatch(setFormData(data));
     nextStep();
   };
 
