@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import useUserStore from "@/store/useUserStore";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store"; // Ensure this points to your store file
 
 interface ProtectedRouteProps {
   allowedRoles: string[];
@@ -11,16 +12,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   allowedRoles,
   children,
 }) => {
-  const { role } = useUserStore();
-  // console.log({ role });
+  const role = useSelector((state: RootState) => state.auth.role); // ✅ Now role exists in Redux state
 
   if (!role) {
-    // If no role, redirect to login
     return <Navigate to="/signin" />;
   }
 
   if (!allowedRoles.includes(role)) {
-    // If role is not allowed, redirect to homepage
     return <Navigate to="/" />;
   }
 

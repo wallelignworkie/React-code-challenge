@@ -14,24 +14,21 @@ interface LoginResponse {
     role: string;
     firstName: string;
   };
+  role: string;
 }
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 export const signIn = async (
-  credentials: LoginCredentials,
-  setLoading: (isLoading: boolean) => void
+  credentials: LoginCredentials
 ): Promise<LoginResponse> => {
   try {
-    setLoading(true);
     const response = await axios.post<LoginResponse>(
       `${baseURL}auth/signin`,
       credentials
     );
-    setLoading(false);
 
     return response.data;
   } catch (error: any) {
-    setLoading(false);
     console.error(" Error!!", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Failed to Login");
   }

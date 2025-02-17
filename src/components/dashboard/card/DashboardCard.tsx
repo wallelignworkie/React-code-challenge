@@ -3,12 +3,13 @@ import {
   getAdminOverviewData,
   getAgentOverviewData,
 } from "@/services/dashboardService";
-import useUserStore from "@/store/useUserStore";
+import { RootState } from "@/store/store";
 import formatNumber from "@/utils/formatNumber";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 const DashboardCard = () => {
-  const { role } = useUserStore();
+  const role = useSelector((state: RootState) => state.auth.role);
   const effectiveRole = role ?? "guest"; // Fallback to "guest" if role is null
 
   // Fetch admin data only for admins

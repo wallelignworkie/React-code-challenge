@@ -1,72 +1,97 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import useUserStore from "@/store/useUserStore";
-import { signIn } from "@/services/authService";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
 import LogoImage from "../../assets/images/engida-express-logo2.jpg";
+import { useNavigate } from "react-router-dom";
+import { signIn } from "@/services/authService"; // API function
+import {
+  loginRequest,
+  loginSuccess,
+  loginFailure,
+} from "../../store/authSlice";
+import { RootState } from "@/store/store"; // RootState type
 import Button from "@/components/button/Button";
 import ErrorMessage from "../Alert/ErrorMessage";
-import { baseUrl } from "@/services/url";
-import { formatPhoneNumber } from "@/utils/formatPhone";
+
+// Define Login Form Types
+interface LoginFormValues {
+  phone: string;
+  password: string;
+}
 
 const Login: React.FC = () => {
-  const [credentials, setCredentials] = useState({
-    phone: "",
-    password: "",
-  });
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const { setRole } = useUserStore();
-  const { setUser } = useUserStore();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log({ baseUrl });
-  const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const { loading, error } = useSelector((state: RootState) => state.auth); // Get auth state
 
-    const formattedPhone = formatPhoneNumber(credentials.phone.trim());
-    try {
-      const response = await signIn(
-        { ...credentials, phone: formattedPhone },
-        setLoading
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>();
+
+  // ✅ Use TanStack Query to handle login API call
+  const loginMutation = useMutation({
+    mutationFn: async (data: LoginFormValues) => {
+      return signIn(data); // API call
+    },
+
+    // ✅ Runs before the API call
+    onMutate: () => {
+      dispatch(loginRequest()); // Start loading state
+    },
+
+    onSuccess: (response) => {
+      const { access_token, refresh_token, data } = response;
+
+      const user = {
+        id: data.id,
+        firstName: data.firstName,
+        email: data.email,
+        role: data.role,
+      };
+
+      dispatch(
+        loginSuccess({
+          user,
+          accessToken: access_token,
+          refreshToken: refresh_token,
+        })
       );
 
-      // Extract data from the API response
-      const { role } = response.data;
-      const { access_token, refresh_token } = response;
-      const user = response.data;
-      console.log({ response });
-
-      // Save tokens in localStorage
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
+      localStorage.setItem("user", JSON.stringify(user));
 
-      // Set role in Zustand state
-      setRole(role);
-      setUser(user);
+      navigate(
+        user.role === "ADMIN" || user.role === "AGENT" ? "/dashboard" : "/"
+      );
+    },
 
-      // Navigate based on role
-      if (role === "ADMIN" || role === "AGENT") {
-        navigate("/dashboard");
-      } else {
-        navigate("/");
-      }
-    } catch (err: any) {
-      console.error("Error during login:", err.response?.data || err.message);
-      setError("Invalid phone or password"); // Show a user-friendly error
-    }
+    onError: (error: any) => {
+      dispatch(loginFailure(error.message)); // Save error state
+    },
+  });
+
+  const onSubmit = (data: LoginFormValues) => {
+    loginMutation.mutate(data); // Trigger API call
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
-        className="bg-white shadow-md rounded px-8 pt-10 pb-10 mb-4 max-w-lg w-full min-h-[540px] space-y-6"
-        onSubmit={handleLogin} // Attach the corrected handler
+        className="bg-white shadow-md rounded px-8 pt-10 pb-10 mb-4 max-w-lg w-full"
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex justify-center pb-[30px]">
-          <img src={LogoImage} alt="logo" className="w-full h-32" />
+        <div className="flex justify-center pb-[30px] ">
+          <img src={LogoImage} alt="logo" className="w-full h-32 rounded-md" />
         </div>
+
         {error && <ErrorMessage user_text={error} />}
 
         <div className="space-y-6 pb-8">
+          {/* Phone Input */}
           <div>
             <label
               htmlFor="phone"
@@ -76,16 +101,17 @@ const Login: React.FC = () => {
             </label>
             <input
               id="phone"
-              type="phone"
-              className="border p-3 w-full rounded placeholder-gray-500"
+              type="text"
+              className="border p-3 w-full rounded"
               placeholder="Phone"
-              value={credentials.phone}
-              onChange={(e) =>
-                setCredentials({ ...credentials, phone: e.target.value })
-              }
+              {...register("phone", { required: "Phone number is required" })}
             />
+            {errors.phone && (
+              <p className="text-red-500 text-sm">{errors.phone.message}</p>
+            )}
           </div>
 
+          {/* Password Input */}
           <div>
             <label
               htmlFor="password"
@@ -96,23 +122,22 @@ const Login: React.FC = () => {
             <input
               id="password"
               type="password"
-              className="border p-3 w-full rounded placeholder-gray-400 placeholder:text-md"
+              className="border p-3 w-full rounded"
               placeholder="Password"
-              value={credentials.password}
-              onChange={(e) =>
-                setCredentials({ ...credentials, password: e.target.value })
-              }
+              {...register("password", { required: "Password is required" })}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password.message}</p>
+            )}
           </div>
         </div>
 
-        <div>
-          <Button
-            disabled={loading}
-            buttonText={loading ? "Loading..." : "Login"}
-            type="submit"
-          />
-        </div>
+        {/* Submit Button */}
+        <Button
+          disabled={loginMutation.isPending}
+          buttonText={loading ? "Loading..." : "Login"}
+          type="submit"
+        />
       </form>
     </div>
   );

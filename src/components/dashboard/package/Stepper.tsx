@@ -1,4 +1,5 @@
-import { usePackageStore } from "@/store/usePackageStore";
+import { useSelector } from "react-redux";
+import { selectCurrentStep } from "@/store/packageSlice"; // Correct import
 
 const steps = [
   { id: 1, title: "Sender info." },
@@ -9,21 +10,19 @@ const steps = [
 ];
 
 const Stepper = () => {
-  const { currentStep } = usePackageStore();
+  const currentStep = useSelector(selectCurrentStep); // Get Redux state
 
   return (
-    <div className="flex  ml-0 sm:ml-14 mr-0 sm:-mr-24  max-w-full mx-auto">
+    <div className="flex ml-0 sm:ml-14 mr-0 sm:-mr-24 max-w-full mx-auto">
       {steps.map((step, index) => {
         const isCompleted = currentStep > step.id;
         const isActive = currentStep === step.id;
-        const isUpcoming = currentStep < step.id;
-        console.log(isUpcoming);
 
         return (
           <div key={step.id} className="w-full">
             <h6
               className={`text-sm font-bold mb-2 ${
-                isCompleted || isActive ? "text-EPrimary" : "text-gray-300"
+                isCompleted || isActive ? "text-green-500" : "text-gray-300"
               }`}
             >
               {step.title}
@@ -32,7 +31,7 @@ const Stepper = () => {
             <div className="flex items-center w-full">
               {/* Step Circle */}
               <div
-                className={`w-7 h-7 shrink-0 mx-[-1px] flex items-center justify-center rounded-full border-2 ${
+                className={`w-7 h-7 shrink-0 mx-[-1px] flex items-center justify-center rounded-full border-2 transition-all duration-300 ${
                   isCompleted
                     ? "border-green-500 bg-green-500 text-white"
                     : isActive
@@ -58,7 +57,7 @@ const Stepper = () => {
               {/* Step Line */}
               {index !== steps.length - 1 && (
                 <div
-                  className={`w-full h-[3px] ${
+                  className={`w-full h-[3px] transition-all duration-300 ${
                     isCompleted ? "bg-green-500" : "bg-gray-300"
                   }`}
                 ></div>

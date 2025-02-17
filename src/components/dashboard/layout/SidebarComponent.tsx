@@ -1,9 +1,10 @@
-import useUserStore from "@/store/useUserStore";
 import Logo from "../../../assets/images/engida-express-logo2.jpg";
 import { getSidebarElementsByRole } from "./SidebarElements";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const SidebarComponent = () => {
-  const { role } = useUserStore();
+  const role = useSelector((state: RootState) => state.auth.role);
 
   // Dynamically filter sidebar elements based on role
   const sidebarElements = getSidebarElementsByRole(role);
