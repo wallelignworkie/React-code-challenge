@@ -1,5 +1,5 @@
 {
-  "name": "tamagn-express",
+  "name": "react@19-tailwindCss-shadcn-setup",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -32,8 +32,7 @@
     "react-router-dom": "^7.1.1",
     "recharts": "^2.15.0",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7",
-    "zustand": "^5.0.3"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
