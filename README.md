@@ -2,7 +2,7 @@
 
 A responsive React + Vite application for selecting skip sizes, featuring server-side rendering with TanStack, custom loading/error states, and deployment via Vercel.
 
-![screenshot](./public/screenshot.png) <!-- Optional screenshot -->
+![screenshot](./public/screenshot.PNG) <!-- Optional screenshot -->
 
 ---
 
