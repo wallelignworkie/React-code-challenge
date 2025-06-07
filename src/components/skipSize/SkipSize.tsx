@@ -2,10 +2,17 @@ import { useState } from "react";
 import { useSkipSize } from "@/hooks/skip-size";
 
 import img4 from "../../assets/4-yarder-skip.jpg";
-import img6 from "../../assets/4-yarder-skip.jpg";
-import img8 from "../../assets/4-yarder-skip.jpg";
-import img10 from "../../assets/4-yarder-skip.jpg";
-import img14 from "../../assets/4-yarder-skip.jpg";
+import img5 from "../../assets/5-yarder-skip.jpg";
+import img6 from "../../assets/6-yarder-skip.jpg";
+import img8 from "../../assets/8-yarder-skip.jpg";
+import img10 from "../../assets/10-yarder-skip.jpg";
+
+import img12 from "../../assets/12-yarder-skip.jpg";
+import img14 from "../../assets/14-yarder-skip.jpg";
+import img16 from "../../assets/16-yarder-skip.jpg";
+import img20 from "../../assets/20-yarder-skip.jpg";
+import img40 from "../../assets/40-yarder-skip.jpg";
+
 import SkipCardSkeleton from "../skeletonLoading/SkipCardSkeleton";
 import { SkipData } from "@/types/skip";
 
@@ -15,10 +22,15 @@ const SkipSize = () => {
 
   const skipImages: Record<number, string> = {
     4: img4,
+    5: img5,
     6: img6,
     8: img8,
     10: img10,
+    12: img12,
     14: img14,
+    16: img16,
+    20: img20,
+    40: img40,
   };
 
   if (isLoading) {
@@ -41,50 +53,53 @@ const SkipSize = () => {
 
   return (
     <>
-      <div className="p-14 mt-8">
-        <h3 className="text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">
+      <div className="p-14 pt-8 bg-black">
+        <h3 className="text-2xl font-bold text-center mb-2 text-white dark:text-white">
           Choose Your Skip Size
         </h3>
-        <p className="text-base text-center">
+        <p className="text-[16px] text-center  text-gray-200 font-semibold font-sans">
           Select the skip size that best suits your needs
         </p>
       </div>
 
-      <div className="pl-6 gap-6 grid grid-cols-3">
+      <div className=" gap-y-6  gap-x-5 grid grid-cols-3 bg-black pb-32 px-16">
         {skipSizeData?.map((skip) => (
           <div
             key={skip.id}
             onClick={() => setSelectedSkip(skip)}
-            className={`cursor-pointer max-w-sm border rounded-lg shadow-sm transition-all
+            className={` hover:border-gray-600 cursor-pointer  border rounded-lg shadow-sm transition-all bg-gray-900 pb-4 pr-3
               ${
                 selectedSkip?.id === skip.id
                   ? "border-blue-500 bg-blue-50 dark:border-blue-400"
-                  : "bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+                  : "bg-white border-gray-800 dark:bg-gray-800 dark:border-gray-700"
               }`}
           >
             <img
-              className="rounded-t-lg w-full object-cover"
+              className="rounded-t-lg w-full p-4 rounded-md h-[220px] object-cover"
               src={skipImages[skip.size] || img4}
               alt={`${skip.size}-yard skip`}
             />
-            <div className="p-5">
-              <h5 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {skip.size} Yard Skip
-              </h5>
-              <p className="text-gray-700 dark:text-gray-400 mb-4">
+            <div className=" pl-5">
+              <div className=" flex justify-between pr-3">
+                <h5 className="text-xl font-bold text-gray-300 dark:text-gray-100 mb-2">
+                  {skip.size} Yard Skip
+                </h5>
+                <p className="text-blue-700 font-semibold text-lg ">
+                  £{skip.price_before_vat}
+                </p>
+              </div>
+              <p className="text-gray-400 dark:text-gray-400 mb-4 text-sm">
                 14 day hire period
               </p>
-              <p className="text-blue-700 font-semibold text-lg mb-4">
-                £{skip.price_before_vat}
-              </p>
+
               <button
                 onClick={() => setSelectedSkip(skip)}
-                className={`w-full inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-lg 
+                className={` mt-5 w-full inline-flex justify-center items-center px-4 py-3 text-sm font-medium rounded-lg 
                   ${
                     selectedSkip?.id === skip.id
                       ? "bg-blue-600"
-                      : "bg-blue-700 hover:bg-blue-800"
-                  } text-white`}
+                      : "bg-gray-700 hover:bg-gray-800"
+                  } text-gray-100`}
               >
                 {selectedSkip?.id === skip.id ? "Selected" : "Select This Skip"}
                 <svg
@@ -109,13 +124,13 @@ const SkipSize = () => {
 
       {/* Footer */}
       {selectedSkip && (
-        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4 flex justify-between items-center z-50 shadow-inner">
-          <div className="text-lg font-medium">
+        <div className="fixed bottom-0 left-0 w-full bg-gray-900 border-t-[0.5px] border-t-gray-300 text-white p-4 flex justify-between items-center z-50 shadow-inner">
+          <div className="text-lg font-medium border-b-[0.3px] ml-6">
             {selectedSkip.size} Yard Skip
-            <span className="text-blue-400 font-bold ml-2">
+            <span className="text-blue-400 font-bold ml-4">
               £{selectedSkip.price_before_vat}
             </span>
-            <span className="ml-1">14 day hire</span>
+            <span className="ml-3 text-sm ">14 day hire</span>
           </div>
           <div className="flex gap-3">
             <button
