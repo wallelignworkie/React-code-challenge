@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSkipSize } from "@/hooks/skip-size";
+import { TriangleAlert } from "lucide-react";
 
 import img4 from "../../assets/4-yarder-skip.jpg";
 import img5 from "../../assets/5-yarder-skip.jpg";
@@ -62,7 +63,7 @@ const SkipSize = () => {
         </p>
       </div>
 
-      <div className=" gap-y-6  gap-x-5 grid grid-cols-3 bg-black pb-32 px-16">
+      <div className=" gap-y-6  gap-x-5  bg-black pb-32 px-16  grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:px-6 lg:px-16">
         {skipSizeData?.map((skip) => (
           <div
             key={skip.id}
@@ -74,11 +75,28 @@ const SkipSize = () => {
                   : "bg-white border-gray-800 dark:bg-gray-800 dark:border-gray-700"
               }`}
           >
-            <img
-              className="rounded-t-lg w-full p-4 rounded-md h-[220px] object-cover"
-              src={skipImages[skip.size] || img4}
-              alt={`${skip.size}-yard skip`}
-            />
+            <div className="relative p-4">
+              <img
+                className="rounded-lg w-full h-[220px] object-cover"
+                src={skipImages[skip.size] || img4}
+                alt={`${skip.size}-yard skip`}
+              />
+              {/* Top-right overlay */}
+              <div className="absolute top-2 right-2 mt-4 mr-5 bg-blue-700 text-gray-100 font-700 text-[15px] px-4 py-[1.4px]  rounded-2xl shadow-md">
+                {skip.size} Yards
+              </div>
+
+              {/* Bottom-left overlay */}
+              {skip.allowed_on_road == false && (
+                <div className="absolute bottom-2 left-2 bg-black/70 text-xs font-medium px-2 py-1 ml-3 mb-3 rounded-md shadow-md text-white flex items-center gap-1">
+                  <TriangleAlert className="text-yellow-400 w-4 h-4" />
+                  <span className="text-yellow-400">
+                    Not Allowed On The Road
+                  </span>
+                </div>
+              )}
+            </div>
+
             <div className=" pl-5">
               <div className=" flex justify-between pr-3">
                 <h5 className="text-xl font-bold text-gray-300 dark:text-gray-100 mb-2">
@@ -124,15 +142,15 @@ const SkipSize = () => {
 
       {/* Footer */}
       {selectedSkip && (
-        <div className="fixed bottom-0 left-0 w-full bg-gray-900 border-t-[0.5px] border-t-gray-300 text-white p-4 flex justify-between items-center z-50 shadow-inner">
-          <div className="text-lg font-medium border-b-[0.3px] ml-6">
-            {selectedSkip.size} Yard Skip
+        <div className="fixed  bottom-0 left-0 w-full bg-gray-900 border-t-[0.5px]  border-t-gray-300 text-white p-4 sm:flex justify-between items-center z-50 shadow-inner">
+          <div className="text-lg font-medium sm:border-b-[0.3px] ml-6 ">
+            {selectedSkip.size} Yard Skip ,
             <span className="text-blue-400 font-bold ml-4">
               £{selectedSkip.price_before_vat}
             </span>
             <span className="ml-3 text-sm ">14 day hire</span>
           </div>
-          <div className="flex gap-3">
+          <div className="flex  justify-between gap-3 sm:mt-0 mt-6 ">
             <button
               className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-md"
               onClick={() => setSelectedSkip(null)}
