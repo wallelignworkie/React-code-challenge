@@ -7,21 +7,26 @@ Absolutely! Here's the finalized `README.md` — clean, ready to copy and paste 
 
 A responsive React + Vite application for selecting skip sizes, featuring server-side rendering with TanStack Query, custom loading/error states, and deployment via Vercel.
 
-## 📌 this is my better design for this scenario, but to change completely the design, i have done screenshot2
+## 📌 This is my better design for this scenario
 
-![screenshot1](
-./public/screenshot.PNG,
-./public/screenshot-1.PNG,
-./public/screenshot-2.PNG,
-./public/screenshot-3.PNG)
+Here are the screenshots showing the current design:
 
-![screenshot2](
-./public/screenshot.PNG,
-./public/screenshot-1.PNG,
-./public/screenshot-2.PNG,
-./public/screenshot-3.PNG)
+### 🖼️ Screenshot 1
+
+![screenshot](./public/screenshot.PNG)
+![screenshot-1](./public/screenshot-1.PNG)
+![screenshot-2](./public/screenshot-2.PNG)
+![screenshot-3](./public/screenshot-3.PNG)
 
 ---
+
+### 🔁 Screenshot 2 (Alternative Design)
+
+This is a completely different layout I designed as an alternative.
+
+![screenshot-alt-1](./public/screenshot-1.PNG)
+![screenshot-alt-2](./public/screenshot-2.PNG)
+![screenshot-alt-3](./public/screenshot-3.PNG)
 
 ## 📌 Features
 
