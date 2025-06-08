@@ -55,8 +55,6 @@ Add your environment variables:
 VITE_API_BASE_URL=https://app.wewantwaste.co.uk/api/
 ```
 
-> ⚠️ All environment variables must be prefixed with `VITE_` to be accessible in the Vite app.
-
 ---
 
 ### 4. Run the development server
@@ -104,7 +102,7 @@ This app uses **TanStack Query** for:
 
 ### Example Features:
 
-- `fetchStatus === 'loading'` used for conditional UI
+- `fetchStatus === 'isLoading'` used for conditional UI
 - `<SkeletonLoading />` displayed while data loads
 - Error fallback handled via boundary components
 
@@ -115,7 +113,7 @@ This app uses **TanStack Query** for:
 Pull requests are welcome!
 
 ### To contribute:
-
+```bash
 # 1. Fork the repo
 # 2. Create your feature branch
 git checkout -b feature-name
@@ -127,15 +125,15 @@ git commit -m "Add new feature"
 git push origin feature-name
 
 # 5. Open a pull request
-
+```
 
 ## 📎 Useful Scripts
 
-
+```bash
 npm run dev       # Start development server
 npm run build     # Build for production
 npm run preview   # Preview production build
-
+```
 
 ## 📄 License
 
