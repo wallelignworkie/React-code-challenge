@@ -90,15 +90,6 @@ const SkipSize = () => {
                   </span>
                 </div>
               )}
-              {/* Bottom-left overlay
-              {skip.allowed_on_road == false && (
-                <div className="absolute bottom-2 left-2 bg-black/70 text-xs font-medium px-2 py-1 ml-3 mb-3 rounded-md shadow-md text-white flex items-center gap-1">
-                  <TriangleAlert className="text-yellow-400 w-4 h-4" />
-                  <span className="text-yellow-400">
-                    Not Allowed On The Road
-                  </span>
-                </div>
-              )} */}
             </div>
 
             <div className=" pl-5">
