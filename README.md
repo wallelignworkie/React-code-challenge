@@ -7,7 +7,19 @@ Absolutely! Here's the finalized `README.md` — clean, ready to copy and paste 
 
 A responsive React + Vite application for selecting skip sizes, featuring server-side rendering with TanStack Query, custom loading/error states, and deployment via Vercel.
 
-![screenshot](./public/screenshot.PNG)
+## 📌 this is my better design for this scenario, but to change completely the design, i have done screenshot2
+
+![screenshot1](
+./public/screenshot.PNG,
+./public/screenshot-1.PNG,
+./public/screenshot-2.PNG,
+./public/screenshot-3.PNG)
+
+![screenshot2](
+./public/screenshot.PNG,
+./public/screenshot-1.PNG,
+./public/screenshot-2.PNG,
+./public/screenshot-3.PNG)
 
 ---
 
