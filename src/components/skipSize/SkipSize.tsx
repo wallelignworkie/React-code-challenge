@@ -82,11 +82,15 @@ const SkipSize = () => {
                 alt={`${skip.size}-yard skip`}
               />
               {/* Top-right overlay */}
-              <div className="absolute top-2 right-2 mt-4 mr-5 bg-blue-700 text-gray-100 font-700 text-[15px] px-4 py-[1.4px]  rounded-2xl shadow-md">
-                {skip.size} Yards
-              </div>
-
-              {/* Bottom-left overlay */}
+              {skip.allowed_on_road == false && (
+                <div className="absolute top-2 right-2 mt-3 mr-3 flex bg-black/70 text-gray-100 font-700 py-1 text-xs font-medium px-4   rounded-2xl shadow-md">
+                  <TriangleAlert className="text-yellow-400 w-4 h-4" />
+                  <span className="text-yellow-400">
+                    Not Allowed On The Road
+                  </span>
+                </div>
+              )}
+              {/* Bottom-left overlay
               {skip.allowed_on_road == false && (
                 <div className="absolute bottom-2 left-2 bg-black/70 text-xs font-medium px-2 py-1 ml-3 mb-3 rounded-md shadow-md text-white flex items-center gap-1">
                   <TriangleAlert className="text-yellow-400 w-4 h-4" />
@@ -94,7 +98,7 @@ const SkipSize = () => {
                     Not Allowed On The Road
                   </span>
                 </div>
-              )}
+              )} */}
             </div>
 
             <div className=" pl-5">
