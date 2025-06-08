@@ -1,15 +1,37 @@
-# 🚛 Skip Size Picker App
-
-A responsive React + Vite application for selecting skip sizes, featuring server-side rendering with TanStack, custom loading/error states, and deployment via Vercel.
-
-![screenshot](./public/screenshot.PNG) <!-- Optional screenshot -->
+Absolutely! Here's the finalized `README.md` — clean, ready to copy and paste into your GitHub repo:
 
 ---
+
+````markdown
+# 🚛 Skip Size Picker App
+
+A responsive React + Vite application for selecting skip sizes, featuring server-side rendering with TanStack Query, custom loading/error states, and deployment via Vercel.
+
+## 📌 This is my better design for this scenario
+
+Here are the screenshots showing the current design:
+
+### 🖼️ Screenshot 1
+
+![screenshot](./public/screenshot.PNG)
+![screenshot-1](./public/screenshot-1.PNG)
+![screenshot-2](./public/screenshot-2.PNG)
+![screenshot-3](./public/screenshot-3.PNG)
+
+---
+
+### 🔁 Screenshot 2 (Alternative Design)
+
+This is a completely different layout I designed as an alternative.
+
+![screenshot-alt-1](./public/screenshot-1.PNG)
+![screenshot-alt-2](./public/screenshot-2.PNG)
+![screenshot-alt-3](./public/screenshot-3.PNG)
 
 ## 📌 Features
 
 - ⚛️ Built with **React + Vite**
-- ⚡️ Server-side rendering via **TanStack Router**
+- ⚡️ Server-side rendering via **TanStack Query**
 - 🌀 Custom loading and error boundaries
 - 📱 Fully responsive (mobile-first design)
 - 📦 Integrated with real data fetching and conditional logic
@@ -23,30 +45,6 @@ A responsive React + Vite application for selecting skip sizes, featuring server
 
 ---
 
-## 📂 Project Structure
-
-├── public/ # Static files
-├── src/
-│ ├── assets/ # Images and media
-│ ├── components/ # Reusable components
-│ ├── hooks/ # Custom React hooks
-│ ├── pages/ # Page-level components
-│ ├── types/ # TypeScript types
-│ ├── skeletonLoading/ # Custom skeleton loaders
-│ ├── App.tsx
-│ └── main.tsx
-├── .env # Environment variables (see below)
-├── index.html
-├── package.json
-├── vite.config.ts
-└── tsconfig.json
-
-yaml
-Copy
-Edit
-
----
-
 ## ⚙️ Getting Started
 
 ### 1. Clone the repository
@@ -54,129 +52,124 @@ Edit
 ```bash
 git clone https://github.com/your-username/your-project-name.git
 cd your-project-name
-2. Install dependencies
-bash
-Copy
-Edit
+```
+````
+
+### 2. Install dependencies
+
+```bash
 npm install
 # or
 yarn
-3. Create a .env file
-Make sure to create a .env file in the root directory for your environment variables.
-
-bash
-Copy
-Edit
-touch .env
-Inside .env, add your variables like:
-
-ini
-Copy
-Edit
-VITE_API_BASE_URL=https://your-api-url.com
-⚠️ Make sure to prefix all your environment variables with VITE_ so they are accessible in the Vite app.
-
-4. Run the development server
-bash
-Copy
-Edit
-npm run dev
-App will be available at http://localhost:5173
-
-5. Build for production
-bash
-Copy
-Edit
-npm run build
-6. Preview production build locally
-bash
-Copy
-Edit
-npm run preview
-🚀 Deployment
-This project is deployed via Vercel.
-
-To deploy:
-
-Push your repo to GitHub
-
-Go to https://vercel.com/import
-
-Import the GitHub repository
-
-Set up your environment variables in Vercel’s dashboard
-
-Deploy 🚀
-
-🔁 SSR with TanStack Router
-This app uses TanStack Router for:
-
-Server-side rendering (SSR)
-
-Route-level loading states
-
-Route-based error boundaries
-
-Example Features:
-Route-aware <SkeletonLoading />
-
-Error fallback using TanStack’s errorElement
-
-Conditional rendering during fetchStatus === 'loading'
-
-🧪 Testing
-Optional: Include only if you're writing tests.
-
-bash
-Copy
-Edit
-npm run test
-📄 License
-This project is licensed under the MIT License.
-
-🙋‍♂️ Author & Contact
-Developed by Your Name
-📫 Contact: your.email@example.com
-
-🤝 Contributing
-Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
-
-Fork the repo
-
-Create your feature branch (git checkout -b feature-name)
-
-Commit your changes (git commit -m 'Add new feature')
-
-Push to the branch (git push origin feature-name)
-
-Open a pull request
-
-📎 Useful Scripts
-bash
-Copy
-Edit
-npm run dev       # Start dev server
-npm run build     # Create production build
-npm run preview   # Preview production build
-vbnet
-Copy
-Edit
-
-Let me know if you’d like this written into a `README.md` file or need help pushing it to GitHub.
-
-
-
-
-
-
-
- 
-
-
-
-Tools
-
-
-
-Chat
 ```
+
+### 3. Create a `.env` file
+
+Create a `.env` file in the root directory:
+
+```bash
+touch .env
+```
+
+Add your environment variables:
+
+```
+VITE_API_BASE_URL=https://app.wewantwaste.co.uk/api/
+```
+
+> ⚠️ All environment variables must be prefixed with `VITE_` to be accessible in the Vite app.
+
+---
+
+### 4. Run the development server
+
+```bash
+npm run dev
+```
+
+App will be available at:
+[http://localhost:2525](http://localhost:2525) _(or the default Vite port 5173)_
+
+---
+
+### 5. Build for production
+
+```bash
+npm run build
+```
+
+### 6. Preview production build locally
+
+```bash
+npm run preview
+```
+
+---
+
+## 🚀 Deployment
+
+This project is deployed via **Vercel**.
+
+### To deploy:
+
+1. Push your repo to GitHub
+2. Go to [https://vercel.com/import](https://vercel.com/import)
+3. Import the GitHub repository
+4. Set up your environment variables in Vercel’s dashboard
+5. Deploy 🚀
+
+---
+
+## 🔁 SSR with TanStack Query
+
+This app uses **TanStack Query** for:
+
+- Server-side data prefetching
+- Route-level loading states
+- Route-based error boundaries
+
+### Example Features:
+
+- `fetchStatus === 'loading'` used for conditional UI
+- `<SkeletonLoading />` displayed while data loads
+- Error fallback handled via boundary components
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome!
+
+### To contribute:
+
+```bash
+# 1. Fork the repo
+# 2. Create your feature branch
+git checkout -b feature-name
+
+# 3. Commit your changes
+git commit -m "Add new feature"
+
+# 4. Push to GitHub
+git push origin feature-name
+
+# 5. Open a pull request
+```
+
+---
+
+## 📎 Useful Scripts
+
+```bash
+npm run dev       # Start development server
+npm run build     # Build for production
+npm run preview   # Preview production build
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](./LICENSE).
+
+Let me know if you want help editing your actual GitHub repo's README or publishing the live link!
