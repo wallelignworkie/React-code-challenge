@@ -68,7 +68,7 @@ const SkipSize = () => {
           <div
             key={skip.id}
             onClick={() => setSelectedSkip(skip)}
-            className={` hover:border-gray-600 cursor-pointer  border rounded-lg shadow-sm transition-all bg-gray-900 pb-4 pr-3
+            className={` hover:border-gray-600 cursor-pointer  border rounded-lg shadow-sm transition-all bg-cardBgColor pb-4 pr-3
               ${
                 selectedSkip?.id === skip.id
                   ? "border-blue-500 bg-blue-50 dark:border-blue-400"
