@@ -15,7 +15,8 @@ Here are the screenshots showing the current design:
 
 ![screenshot](screenshot/screenshot.png)
 ![screenshot-1](screenshot/screenshot-1.png)
-![screenshot-2](screenshot/screenshot-2.png)
+![screenshot-2](screenshot/screenshot_2.PNG)
+![screenshot-2](screenshot_2.PNG)
 ![screenshot-3](screenshot/screenshot-3.png)
 
 ---
