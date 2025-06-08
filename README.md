@@ -153,4 +153,4 @@ npm run preview   # Preview production build
 
 This project is licensed under the [MIT License](./LICENSE).
 
-Let me know if you want help editing your actual GitHub repo's README or publishing the live link!
+
