@@ -1,6 +1,4 @@
-Absolutely! Here's the finalized `README.md` — clean, ready to copy and paste into your GitHub repo:
 
----
 
 ````markdown
 # 🚛 Skip Size Picker App
