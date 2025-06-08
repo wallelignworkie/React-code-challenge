@@ -69,11 +69,11 @@ const SkipSize = () => {
             key={skip.id}
             onClick={() => setSelectedSkip(skip)}
             className={` hover:border-gray-600 cursor-pointer  border rounded-lg shadow-sm transition-all bg-gray-900 pb-4 pr-3
-            ${
-              selectedSkip?.id === skip.id
-                ? "border-blue-500 bg-blue-50 dark:border-blue-400"
-                : " border-gray-800 dark:bg-gray-800 dark:border-gray-700"
-            }`}
+              ${
+                selectedSkip?.id === skip.id
+                  ? "border-blue-500 bg-blue-50 dark:border-blue-400"
+                  : "border-gray-800 dark:bg-gray-800 dark:border-gray-700"
+              }`}
           >
             <div className="relative p-4">
               <img
@@ -82,8 +82,13 @@ const SkipSize = () => {
                 alt={`${skip.size}-yard skip`}
               />
               {/* Top-right overlay */}
+              {/* <div className="absolute top-2 right-2 mt-5 mr-5 bg-blue-700 text-gray-100 font-700 text-[16px] px-4 py-[1.4px]  rounded-2xl shadow-md">
+                {skip.size} Yards
+              </div> */}
+
+              {/* Bottom-left overlay */}
               {skip.allowed_on_road == false && (
-                <div className="absolute top-2 right-2 mt-3 mr-3 flex bg-black/70 text-gray-100 font-700 py-1 text-xs font-medium px-4   rounded-2xl shadow-md">
+                <div className="absolute bottom-2 left-2 bg-black/70 text-xs font-medium px-2 py-1 ml-3 mb-3 rounded-md shadow-md text-white flex items-center gap-1">
                   <TriangleAlert className="text-yellow-400 w-4 h-4" />
                   <span className="text-yellow-400">
                     Not Allowed On The Road
