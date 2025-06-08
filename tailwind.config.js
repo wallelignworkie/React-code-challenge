@@ -10,14 +10,8 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        EPrimary: "#374151", // Custom gray
-        ESecondary: "#FBBF24", // Example: Yellow
-        EDanger: "#DC2626", // Example: Red
-        customGray: {
-          ELight: "#E5E7EB",
-          EDEFAULT: "#6B7280",
-          EDark: "#4B5563",
-        },
+        bgColor: "#374151", // Custom gray
+        cardBgColor: "#212121",
       },
     },
   },
