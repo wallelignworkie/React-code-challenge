@@ -13,10 +13,10 @@ Here are the screenshots showing the current design:
 
 ### 🖼️ Screenshot 1
 
-![screenshot](screenshot/screenshot.PNG)
-![screenshot-1](screenshot/screenshot-1.PNG)
-![screenshot-2](screenshot/screenshot-2.PNG)
-![screenshot-3](screenshot/screenshot-3.PNG)
+![screenshot](screenshot/screenshot.png)
+![screenshot-1](screenshot/screenshot-1.png)
+![screenshot-2](screenshot/screenshot-2.png)
+![screenshot-3](screenshot/screenshot-3.png)
 
 ---
 
@@ -24,9 +24,9 @@ Here are the screenshots showing the current design:
 
 This is a completely different layout I designed as an alternative.
 
-![screenshot-alt-1](screenshot/screenshot-1.PNG)
-![screenshot-alt-2](screenshot/screenshot-2.PNG)
-![screenshot-alt-3](screenshot/screenshot-3.PNG)
+![screenshot-alt-1](screenshot/screenshot-1.png)
+![screenshot-alt-2](screenshot/screenshot-2.png)
+![screenshot-alt-3](screenshot/screenshot-3.png)
 
 ## 📌 Features
 
