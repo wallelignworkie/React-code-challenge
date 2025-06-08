@@ -24,7 +24,7 @@ A responsive React + Vite application for selecting skip sizes, featuring server
 
 ## 🌐 Live Demo
 
-👉 [View Live on Vercel](https://your-project-name.vercel.app)
+👉 [View Live on Vercel](https://wallelignskipsize-psi.vercel.app/)
 
 ---
 
