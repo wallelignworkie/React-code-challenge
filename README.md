@@ -7,8 +7,6 @@ A responsive React + Vite application for selecting skip sizes, featuring server
 
 ![screenshot](./public/screenshot_2.PNG)
 
----
-
 ## 📌 Features
 
 - ⚛️ Built with **React + Vite**
@@ -18,13 +16,12 @@ A responsive React + Vite application for selecting skip sizes, featuring server
 - 📦 Integrated with real data fetching and conditional logic
 - ☁️ Deployed with **Vercel**
 
----
 
 ## 🌐 Live Demo
 
 👉 [View Live on Vercel](https://wallelignskipsize-psi.vercel.app/)
 
----
+
 
 ## ⚙️ Getting Started
 
@@ -81,11 +78,8 @@ npm run build
 
 ### 6. Preview production build locally
 
-```bash
-npm run preview
-```
 
----
+npm run preview
 
 ## 🚀 Deployment
 
@@ -99,7 +93,6 @@ This project is deployed via **Vercel**.
 4. Set up your environment variables in Vercel’s dashboard
 5. Deploy 🚀
 
----
 
 ## 🔁 SSR with TanStack Query
 
@@ -115,7 +108,7 @@ This app uses **TanStack Query** for:
 - `<SkeletonLoading />` displayed while data loads
 - Error fallback handled via boundary components
 
----
+
 
 ## 🤝 Contributing
 
@@ -123,7 +116,6 @@ Pull requests are welcome!
 
 ### To contribute:
 
-```bash
 # 1. Fork the repo
 # 2. Create your feature branch
 git checkout -b feature-name
@@ -135,19 +127,15 @@ git commit -m "Add new feature"
 git push origin feature-name
 
 # 5. Open a pull request
-```
 
----
 
 ## 📎 Useful Scripts
 
-```bash
+
 npm run dev       # Start development server
 npm run build     # Build for production
 npm run preview   # Preview production build
-```
 
----
 
 ## 📄 License
 
